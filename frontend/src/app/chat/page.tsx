@@ -67,7 +67,7 @@ export default function ChatPage() {
             <div className="bg-primary rounded-md p-1">
               <LockIcon className="h-4 w-4 text-white" />
             </div>
-            <span className="text-xs text-white font-medium">AppNotes</span>
+            <span className="text-xs text-white font-medium">Jappy</span>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export default function ChatPage() {
                     key={item}
                     className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted text-sm text-white"
                   >
-                    <span>Chat with AppNotes {item}</span>
+                    <span>Chat with Jappy {item}</span>
                     <span className="text-red-500 text-xs">×</span>
                   </li>
                 ))}
@@ -117,7 +117,7 @@ export default function ChatPage() {
         <header className="p-4 border-b border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Menu className="h-5 w-5 text-gray-400 md:hidden" />
-            <h1 className="text-sm font-medium text-white">Chat with AppNotes</h1>
+            <h1 className="text-sm font-medium text-white">Chat with Jappy</h1>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" className="text-gray-400">

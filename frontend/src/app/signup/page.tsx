@@ -11,7 +11,7 @@ export default function SignupPage() {
           <div className="bg-primary rounded-md p-1">
             <LockIcon className="h-4 w-4 text-white" />
           </div>
-          <span className="text-xs text-white font-medium">AppNotes</span>
+          <span className="text-xs text-white font-medium">Jappy</span>
         </div>
       </header>
 
@@ -19,7 +19,7 @@ export default function SignupPage() {
         <div className="w-full max-w-md bg-muted rounded-lg p-6 border border-gray-800">
           <div className="text-center mb-6">
             <h1 className="text-xl font-bold text-white">Welcome to</h1>
-            <h2 className="text-2xl font-bold text-white">AppNotes</h2>
+            <h2 className="text-2xl font-bold text-white">Jappy</h2>
           </div>
 
           <div className="mb-6">
