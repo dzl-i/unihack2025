@@ -5,10 +5,59 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
+
+model User {
+    id                     String        @id @default(uuid())
+    name                   String
+    email                  String        @unique
+    password               String
+    remainingLoginAttempts Int           @default(5)
+    profilePic             String
+    tokens                 Token[]
+    projects               UserProject[]
+    messages               Message[]
+}
+
+model Token {
+    id           String @id @default(uuid())
+    accessToken  String @unique
+    refreshToken String @unique
+    userId       String
+    user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+    id       String        @id @default(uuid())
+    name     String
+    code     String        @unique
+    isShared Boolean       @default(false)
+    messages Message[]
+    users    UserProject[]
+}
+
+model UserProject {
+    id        String  @id @default(uuid())
+    userId    String
+    user      User    @relation(fields: [userId], references: [id])
+    projectId String
+    project   Project @relation(fields: [projectId], references: [id])
+}
+
+model Message {
+    id        String   @id @default(uuid())
+    projectId String
+    project   Project  @relation(fields: [projectId], references: [id])
+    senderId  String
+    sender    User     @relation(fields: [senderId], references: [id])
+    content   String
+    createdAt DateTime @default(now())
+}
+
+// Might have to think about the annotation sharing - how will we store it in the db?
