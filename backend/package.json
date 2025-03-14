@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "middleware-http-errors": "^0.1.2",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "socket.io": "^4.8.1",
     "sync-request": "^6.1.0",
     "ts-node": "^10.9.2"

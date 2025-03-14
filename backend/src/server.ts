@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import { Server } from 'http';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Server as SocketIOServer } from 'socket.io';
+import multer from 'multer';
 
 // Helper functions
 import { deleteToken, generateToken } from './helper/tokenHelper';
@@ -24,6 +25,12 @@ import { projectDetails } from './project/details';
 import { projectDelete } from './project/delete';
 import { projectJoin } from './project/join';
 import { projectSendMessage } from './project/send';
+import { projectUploadDataSource } from './project/uploadData';
+
+
+interface MulterRequest extends Request {
+  file?: multer.File;
+}
 
 
 // Database client
@@ -34,6 +41,7 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 const httpServer = new Server(app);
+const upload = multer({ storage: multer.memoryStorage() });
 
 const io = new SocketIOServer(httpServer, {
   cors: {
@@ -243,6 +251,25 @@ app.post('/project/:id/send', authenticateToken, async (req: Request, res: Respo
     const message = await projectSendMessage(userId, projectId, content);
 
     res.status(200).json(message);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Upload a file to a project
+app.post('/project/:id/upload', authenticateToken, upload.single('file'), async (req: MulterRequest, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+
+    const fileBuffer = req.file.buffer;
+    const fileName = req.file.originalname;
+    const fileType = req.file.mimetype; // not sure if S3 needs this
+
+    const file = await projectUploadDataSource(userId, projectId, fileBuffer, fileName);
+
+    res.status(200).json(file);
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
