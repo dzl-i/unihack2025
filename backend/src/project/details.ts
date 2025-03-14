@@ -29,5 +29,9 @@ export async function projectDetails(userId: string, projectId: string) {
         profilePic: message.sender.profilePic,
       },
     })),
+    dataSources: project.dataSources.map((dataSource) => ({
+      dataSourceId: dataSource.id,
+      name: dataSource.name,
+    })),
   };
 }

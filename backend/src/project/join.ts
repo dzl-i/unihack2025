@@ -26,5 +26,9 @@ export async function projectJoin(userId: string, code: string) {
         profilePic: message.sender.profilePic,
       },
     })),
+    dataSources: project.dataSources.map((dataSource) => ({
+      dataSourceId: dataSource.id,
+      name: dataSource.name,
+    })),
   };
 }

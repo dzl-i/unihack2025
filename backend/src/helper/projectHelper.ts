@@ -24,6 +24,17 @@ export async function createProject(userId: string, name: string, code: string) 
           }
         },
       },
+      messages: {
+        include: {
+          sender: true,
+        },
+      },
+      dataSources: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 }
@@ -80,6 +91,12 @@ export async function detailProject(projectId: string) {
               profilePic: true,
             },
           },
+        },
+      },
+      dataSources: {
+        select: {
+          id: true,
+          name: true,
         },
       },
     },
@@ -153,6 +170,12 @@ export async function joinProject(userId: string, code: string) {
               profilePic: true,
             },
           },
+        },
+      },
+      dataSources: {
+        select: {
+          id: true,
+          name: true,
         },
       },
     },
