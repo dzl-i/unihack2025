@@ -21,6 +21,7 @@ import { userProfile } from './user/profile';
 import { projectCreate } from './project/create';
 import { projectList } from './project/list';
 import { projectDetails } from './project/details';
+import { projectDelete } from './project/delete';
 
 
 // Database client
@@ -192,6 +193,21 @@ app.get('/project/:id', authenticateToken, async (req: Request, res: Response) =
     const projectId = req.params.id;
 
     const project = await projectDetails(userId, projectId);
+
+    res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Delete a project
+app.delete('/project/:id', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+
+    const project = await projectDelete(userId, projectId);
 
     res.status(200).json(project);
   } catch (error: any) {

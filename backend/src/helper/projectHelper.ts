@@ -85,3 +85,22 @@ export async function detailProject(projectId: string) {
     },
   });
 }
+
+export async function getProjectById(projectId: string) {
+  return await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      users: true,
+    },
+  });
+}
+
+export async function deleteProject(projectId: string) {
+  return await prisma.project.delete({
+    where: {
+      id: projectId,
+    },
+  });
+}
