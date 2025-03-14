@@ -19,6 +19,8 @@ import { authLogin } from './auth/login';
 import { authLogout } from './auth/logout';
 import { userProfile } from './user/profile';
 import { projectCreate } from './project/create';
+import { projectList } from './project/list';
+import { projectDetails } from './project/details';
 
 
 // Database client
@@ -162,6 +164,34 @@ app.post('/project', authenticateToken, async (req: Request, res: Response) => {
     const userId = res.locals.userId;
     const { name } = req.body;
     const project = await projectCreate(userId, name);
+
+    res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// List all projects for a user
+app.get('/project/list', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projects = await projectList(userId);
+
+    res.status(200).json(projects);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Get details of a project
+app.get('/project/:id', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+
+    const project = await projectDetails(userId, projectId);
 
     res.status(200).json(project);
   } catch (error: any) {

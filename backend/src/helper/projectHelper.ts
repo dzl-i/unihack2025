@@ -27,3 +27,61 @@ export async function createProject(userId: string, name: string, code: string) 
     },
   });
 }
+
+export async function listProject(userId: string) {
+  return await prisma.project.findMany({
+    where: {
+      users: {
+        some: {
+          userId: userId,
+        },
+      },
+    },
+    include: {
+      users: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function detailProject(projectId: string) {
+  return await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      users: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+      messages: {
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
