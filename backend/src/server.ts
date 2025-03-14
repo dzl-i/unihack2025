@@ -17,6 +17,7 @@ import { deleteToken, generateToken } from './helper/tokenHelper';
 import { authRegister } from './auth/register';
 import { authLogin } from './auth/login';
 import { authLogout } from './auth/logout';
+import { userProfile } from './user/profile';
 
 
 // Database client
@@ -133,6 +134,22 @@ io.on('connection', (socket) => {
     console.log('message: ' + msg);
     io.emit('chat message', msg);
   });
+});
+
+
+// USER ROUTES
+
+// Get user profile
+app.get('/user/profile', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const user = await userProfile(userId);
+
+    res.status(200).json(user);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
 });
 
 
