@@ -21,3 +21,26 @@ export async function uploadDataSource(projectId: string, name: string, url: str
     },
   });
 }
+
+export async function getDataSourceById(dataSourceId: string) {
+  return await prisma.dataSource.findUnique({
+    where: {
+      id: dataSourceId,
+    },
+    include: {
+      project: {
+        include: {
+          users: true,
+        },
+      },
+    },
+  });
+}
+
+export async function deleteDataSource(dataSourceId: string) {
+  return await prisma.dataSource.delete({
+    where: {
+      id: dataSourceId,
+    }
+  });
+}

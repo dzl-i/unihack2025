@@ -26,6 +26,7 @@ import { projectDelete } from './project/delete';
 import { projectJoin } from './project/join';
 import { projectSendMessage } from './project/send';
 import { projectUploadDataSource } from './project/uploadData';
+import { projectDeleteDataSource } from './project/deleteData';
 
 
 interface MulterRequest extends Request {
@@ -270,6 +271,21 @@ app.post('/project/:id/upload', authenticateToken, upload.single('file'), async 
     const file = await projectUploadDataSource(userId, projectId, fileBuffer, fileName);
 
     res.status(200).json(file);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Delete a file from a project
+app.delete('/project/data/:id', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const dataId = req.params.id;
+
+    const data = await projectDeleteDataSource(userId, dataId);
+
+    res.status(200).json(data);
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
