@@ -104,3 +104,57 @@ export async function deleteProject(projectId: string) {
     },
   });
 }
+
+export async function joinProject(userId: string, code: string) {
+  const project = await prisma.project.findUnique({
+    where: {
+      code: code,
+    },
+  });
+
+  if (project === null) return null;
+
+  await prisma.project.update({
+    where: {
+      id: project.id,
+    },
+    data: {
+      users: {
+        create: {
+          userId: userId,
+        },
+      },
+    },
+  });
+
+  return await prisma.project.findUnique({
+    where: {
+      id: project.id,
+    },
+    include: {
+      users: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+      messages: {
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}

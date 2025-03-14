@@ -22,6 +22,7 @@ import { projectCreate } from './project/create';
 import { projectList } from './project/list';
 import { projectDetails } from './project/details';
 import { projectDelete } from './project/delete';
+import { projectJoin } from './project/join';
 
 
 // Database client
@@ -208,6 +209,21 @@ app.delete('/project/:id', authenticateToken, async (req: Request, res: Response
     const projectId = req.params.id;
 
     const project = await projectDelete(userId, projectId);
+
+    res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Join a project
+app.post('/project/join', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const { code } = req.body;
+    
+    const project = await projectJoin(userId, code);
 
     res.status(200).json(project);
   } catch (error: any) {
