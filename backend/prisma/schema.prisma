@@ -34,12 +34,13 @@ model Token {
 }
 
 model Project {
-    id       String        @id @default(uuid())
-    name     String
-    code     String        @unique
-    isShared Boolean       @default(false)
-    messages Message[]
-    users    UserProject[]
+    id          String        @id @default(uuid())
+    name        String
+    code        String        @unique
+    isShared    Boolean       @default(false)
+    messages    Message[]
+    users       UserProject[]
+    dataSources DataSource[]
 }
 
 model UserProject {
@@ -58,6 +59,15 @@ model Message {
     sender    User     @relation(fields: [senderId], references: [id])
     content   String
     createdAt DateTime @default(now())
+}
+
+model DataSource {
+    id        String  @id @default(uuid())
+    name      String
+    url       String
+    type      String
+    projectId String
+    project   Project @relation(fields: [projectId], references: [id])
 }
 
 // Might have to think about the annotation sharing - how will we store it in the db?
