@@ -1,12 +1,9 @@
-import { detailProject } from "../helper/projectHelper";
+import { joinProject } from "../helper/projectHelper";
 
-export async function projectDetails(userId: string, projectId: string) {
-  const project = await detailProject(projectId);
+export async function projectJoin(userId: string, code: string) {
+  const project = await joinProject(userId, code);
 
-  if (project === null) throw { status: 404, message: "Project does not exist." };
-
-  const userIds = project.users.map((user) => user.userId);
-  if (!userIds.includes(userId)) throw { status: 403, message: "You do not have access to this project." };
+  if (project === null) throw { status: 404, message: "Project with provided code not found." };
 
   return {
     projectId: project.id,

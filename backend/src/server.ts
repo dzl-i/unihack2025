@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import { Server } from 'http';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Server as SocketIOServer } from 'socket.io';
+import multer from 'multer';
 
 // Helper functions
 import { deleteToken, generateToken } from './helper/tokenHelper';
@@ -21,6 +22,16 @@ import { userProfile } from './user/profile';
 import { projectCreate } from './project/create';
 import { projectList } from './project/list';
 import { projectDetails } from './project/details';
+import { projectDelete } from './project/delete';
+import { projectJoin } from './project/join';
+import { projectSendMessage } from './project/send';
+import { projectUploadDataSource } from './project/uploadData';
+import { projectDeleteDataSource } from './project/deleteData';
+
+
+interface MulterRequest extends Request {
+  file?: multer.File;
+}
 
 
 // Database client
@@ -31,6 +42,7 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 const httpServer = new Server(app);
+const upload = multer({ storage: multer.memoryStorage() });
 
 const io = new SocketIOServer(httpServer, {
   cors: {
@@ -194,6 +206,86 @@ app.get('/project/:id', authenticateToken, async (req: Request, res: Response) =
     const project = await projectDetails(userId, projectId);
 
     res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Delete a project
+app.delete('/project/:id', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+
+    const project = await projectDelete(userId, projectId);
+
+    res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Join a project
+app.post('/project/join', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const { code } = req.body;
+    
+    const project = await projectJoin(userId, code);
+
+    res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Send a message to a project
+app.post('/project/:id/send', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+    const { content } = req.body;
+
+    const message = await projectSendMessage(userId, projectId, content);
+
+    res.status(200).json(message);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Upload a file to a project
+app.post('/project/:id/upload', authenticateToken, upload.single('file'), async (req: MulterRequest, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+
+    const fileBuffer = req.file.buffer;
+    const fileName = req.file.originalname;
+    const fileType = req.file.mimetype; // not sure if S3 needs this
+
+    const file = await projectUploadDataSource(userId, projectId, fileBuffer, fileName);
+
+    res.status(200).json(file);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Delete a file from a project
+app.delete('/project/data/:id', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const dataId = req.params.id;
+
+    const data = await projectDeleteDataSource(userId, dataId);
+
+    res.status(200).json(data);
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
