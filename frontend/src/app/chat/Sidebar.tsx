@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ProfileDropdown } from "@/components/chat/ProfileDropdown";
+import { ProfileDropdown } from "./ProfileDropdown";
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Loader, User } from "lucide-react";
 import { WorkspaceDropdown } from "./WorkspaceDropdown";
-import { Button } from "../ui/button";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
 import DataSourcesList from "./DataSourcesList";

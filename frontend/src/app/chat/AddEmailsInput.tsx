@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
-import { Users, X } from "lucide-react";
+"use client";
+
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 export default function AddEmailsInput({
   emails,
