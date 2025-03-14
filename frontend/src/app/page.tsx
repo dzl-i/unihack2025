@@ -11,7 +11,7 @@ export default function Home() {
           <div className="bg-primary rounded-md p-1">
             <LockIcon className="h-4 w-4 text-white" />
           </div>
-          <span className="text-xs text-white font-medium">AppNotes</span>
+          <span className="text-xs text-white font-medium">Jappy</span>
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" size="sm" className="bg-purple-gradient text-white text-xs h-7 px-4 rounded">
@@ -88,7 +88,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-4 px-4 text-center text-xs text-gray-500 border-t border-gray-800">
-        <p>Copyright © 2025, AppNotes</p>
+        <p>Copyright © 2025, Jappy</p>
       </footer>
     </main>
   )
