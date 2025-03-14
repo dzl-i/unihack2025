@@ -1,13 +1,13 @@
-import { 
-  createContext, 
-  useContext, 
-  useState, 
-  useEffect, 
-  ReactNode 
-} from 'react';
-import useRequest from '@/hooks/useRequest';
-import { useRouter } from 'next/navigation';
-import { mutate } from 'swr';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import useRequest from "@/hooks/useRequest";
+import { useRouter } from "next/navigation";
+import { mutate } from "swr";
 
 // User type based on the response from backend
 interface User {
@@ -22,7 +22,13 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, username?: string, profilePic?: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    username?: string,
+    profilePic?: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   refreshUserData: () => Promise<void>;
 }
@@ -35,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   // Get user profile data on mount
-  const { data: userData, error: userError } = useRequest("GET", "user/profile");
+  const { data: userData, error: userError } = useRequest("/user/profile");
 
   // Use effect to handle user authentication state
   useEffect(() => {
@@ -68,20 +74,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // For POST requests with body, we need to manually fetch instead of using the hook
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const response = await fetch(`${baseUrl}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
+        credentials: "include",
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Login failed');
+        throw new Error(errorData.error || "Login failed");
       }
-      
+
       const loginData = await response.json();
       setUser(loginData);
-      
+
       // Revalidate the user profile data
       await mutate("user/profile");
     } catch (error) {
@@ -92,30 +98,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const register = async (
-    name: string, 
-    email: string, 
-    password: string, 
-    username?: string, 
+    name: string,
+    email: string,
+    password: string,
+    username?: string,
     profilePic?: string
   ) => {
     setIsLoading(true);
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const response = await fetch(`${baseUrl}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, username, profilePic }),
-        credentials: 'include',
+        credentials: "include",
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Registration failed');
+        throw new Error(errorData.error || "Registration failed");
       }
-      
+
       const registerData = await response.json();
       setUser(registerData);
-      
+
       // Revalidate the user profile data
       await mutate("user/profile");
     } catch (error) {
@@ -130,21 +136,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const response = await fetch(`${baseUrl}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
       });
-      
+
       if (!response.ok) {
-        throw new Error('Logout failed');
+        throw new Error("Logout failed");
       }
-      
+
       setUser(null);
-      
+
       // Revalidate the user profile data (which should now fail and return null)
       await mutate("user/profile");
-      router.push('/login');
+      router.push("/login");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +172,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
