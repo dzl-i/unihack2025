@@ -23,6 +23,7 @@ import { projectList } from './project/list';
 import { projectDetails } from './project/details';
 import { projectDelete } from './project/delete';
 import { projectJoin } from './project/join';
+import { projectSendMessage } from './project/send';
 
 
 // Database client
@@ -226,6 +227,22 @@ app.post('/project/join', authenticateToken, async (req: Request, res: Response)
     const project = await projectJoin(userId, code);
 
     res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Send a message to a project
+app.post('/project/:id/send', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+    const { content } = req.body;
+
+    const message = await projectSendMessage(userId, projectId, content);
+
+    res.status(200).json(message);
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });

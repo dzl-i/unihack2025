@@ -158,3 +158,31 @@ export async function joinProject(userId: string, code: string) {
     },
   });
 }
+
+export async function sendMessage(userId: string, projectId: string, content: string) {
+  return await prisma.message.create({
+    data: {
+      content,
+      sender: {
+        connect: {
+          id: userId,
+        },
+      },
+      project: {
+        connect: {
+          id: projectId,
+        },
+      },
+    },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePic: true,
+        },
+      },
+    },
+  });
+}
