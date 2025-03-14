@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { LockIcon } from "lucide-react"
+import Logo from "@/components/logo"
 import Link from "next/link"
 
 export default function LoginPage() {
@@ -8,9 +8,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col">
       <header className="p-4">
         <div className="flex items-center gap-1">
-          <div className="bg-primary rounded-md p-1">
-            <LockIcon className="h-4 w-4 text-white" />
-          </div>
+          <Logo />
           <span className="text-xs text-white font-medium">Jappy</span>
         </div>
       </header>
