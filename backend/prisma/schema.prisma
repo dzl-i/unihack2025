@@ -65,7 +65,6 @@ model DataSource {
     id        String  @id @default(uuid())
     name      String
     url       String
-    type      String
     projectId String
     project   Project @relation(fields: [projectId], references: [id])
 }
