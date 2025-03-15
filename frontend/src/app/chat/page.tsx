@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Loader, TrendingUp } from "lucide-react";
 import { getFileViewerLink } from "@/lib/utils";
 import IFrame from "./Iframe";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 export default function Page() {
   return (

@@ -28,7 +28,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { request } from "@/hooks/useRequest";
+import useQuery, { request } from "@/hooks/useRequest";
 import { toast } from "sonner";
 
 export type Workspace = {

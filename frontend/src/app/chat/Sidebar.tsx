@@ -14,7 +14,6 @@ import { Loader, User, Users } from "lucide-react";
 import { Workspace, WorkspaceDropdown } from "./WorkspaceDropdown";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
-import DataSourcesList from "./DataSourcesList";
 import Logo from "@/components/logo";
 import useQuery from "@/hooks/useRequest";
 
@@ -43,10 +42,6 @@ export function Sidebar() {
       setActiveWorkspace(normalizedWorkspace[0]);
     }
   }, [normalizedWorkspace]);
-
-  if (user == null || workspaces == null) {
-    return null;
-  }
 
   return (
     <ShadcnSidebar>
