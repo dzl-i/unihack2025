@@ -35,6 +35,7 @@ import { projectSendMessage } from './project/send';
 import { projectUploadDataSource } from './project/uploadData';
 import { projectDeleteDataSource } from './project/deleteData';
 import { projectGetData } from './project/getData';
+import { projectAddCollaborator } from './project/addCollaborator';
 
 
 interface MulterRequest extends Request {
@@ -289,6 +290,22 @@ app.delete('/project/data/:id', authenticateToken, async (req: Request, res: Res
     const data = await projectDeleteDataSource(userId, dataId);
 
     res.status(200).json(data);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Add a collaborator to a project
+app.post('/project/:id/collaborator', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+    const { email } = req.body;
+
+    const project = await projectAddCollaborator(userId, projectId, email);
+
+    res.status(200).json(project);
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });

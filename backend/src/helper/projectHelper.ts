@@ -141,6 +141,7 @@ export async function joinProject(userId: string, code: string) {
           userId: userId,
         },
       },
+      isShared: true,
     },
   });
 
@@ -204,6 +205,53 @@ export async function sendMessage(userId: string, projectId: string, content: st
           name: true,
           email: true,
           profilePic: true,
+        },
+      },
+    },
+  });
+}
+
+export async function addCollaborator(projectId: string, collaboratorId: string) {
+  return await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      users: {
+        create: {
+          userId: collaboratorId,
+        },
+      },
+      isShared: true,
+    },
+    include: {
+      users: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+      messages: {
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              profilePic: true,
+            },
+          },
+        },
+      },
+      dataSources: {
+        select: {
+          id: true,
+          name: true,
         },
       },
     },
