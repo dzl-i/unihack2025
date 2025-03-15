@@ -14,6 +14,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useAuth } from "@/contexts/AuthContext"
+import { request } from "@/hooks/useRequest"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 // Define the form schema with Zod
 const formSchema = z.object({
@@ -23,6 +27,11 @@ const formSchema = z.object({
 })
 
 export function SignupForm() {
+  const { setUser } = useAuth()!;
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   // Initialize form with react-hook-form and zod
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,9 +43,40 @@ export function SignupForm() {
   })
 
   // Handle form submission
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    // Handle login logic here
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    setError("");
+    
+    try {
+      // Preparing the payload matching what backend expects
+      const payload = {
+        ...values,
+        username: values.email.split('@')[0], // Simple username from email
+        profilePic: "" // Default profile pic will be set by backend
+      };
+      
+      const { data, error } = await request("POST", "/auth/register", payload);
+      
+      if (error) {
+        setError(error);
+      } else if (data) {
+        // Set user in auth context
+        setUser({
+          userId: data.userId,
+          name: data.name,
+          email: data.email,
+          profilePic: data.profilePic
+        });
+        
+        // Redirect to chat page after successful registration
+        router.push("/chat");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -45,6 +85,12 @@ export function SignupForm() {
         <h3 className="text-3xl font-medium mb-4">Let's get <i className="font-light">you</i> started</h3>
         <p className="text-sm font-light text-muted-foreground">Create an account and start making notes with friends</p>
       </div>
+
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 mb-6 text-red-500 text-sm">
+          {error}
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -60,6 +106,7 @@ export function SignupForm() {
                     className="font-light h-12 rounded-xl p-4"
                     {...field}
                     variant="transparent"
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -79,6 +126,7 @@ export function SignupForm() {
                     className="font-light h-12 rounded-xl p-4"
                     {...field}
                     variant="transparent"
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -99,6 +147,7 @@ export function SignupForm() {
                     className="font-light h-12 rounded-xl p-4"
                     {...field}
                     variant="transparent"
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -107,9 +156,13 @@ export function SignupForm() {
           />
 
           <div className="p-[2px] mt-10">
-            <Button type="submit" className="w-full bg-purple-gradient hover:bg-primary/90 flex items-center justify-center h-11 rounded-xl cursor-pointer hover:opacity-90 transition-opacity">
-              <p className="font-semibold mt-[3px]">Sign up</p>
-              <ArrowRight size={28} />
+            <Button 
+              type="submit" 
+              className="w-full bg-purple-gradient hover:bg-primary/90 flex items-center justify-center h-11 rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
+              disabled={isLoading}
+            >
+              <p className="font-semibold mt-[3px]">{isLoading ? 'Signing up...' : 'Sign up'}</p>
+              {!isLoading && <ArrowRight size={28} />}
             </Button>
           </div>
         </form>
