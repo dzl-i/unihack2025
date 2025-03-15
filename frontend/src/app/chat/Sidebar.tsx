@@ -16,6 +16,7 @@ import { WorkspaceDropdown } from "./WorkspaceDropdown";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
 import DataSourcesList from "./DataSourcesList";
+import Logo from "@/components/logo";
 
 const data = {
   workspaces: [
@@ -35,7 +36,8 @@ export function Sidebar({ onFileSelect }: { onFileSelect: (url: string) => void 
   return (
     <ShadcnSidebar>
       <SidebarHeader className="p-4">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex gap-2 mb-2">
+          <Logo />
           <p className="font-bold group-data-[collapsible=icon]:hidden text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">
             CollabAI
           </p>
