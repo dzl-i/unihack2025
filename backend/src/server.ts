@@ -34,6 +34,7 @@ import { projectJoin } from './project/join';
 import { projectSendMessage } from './project/send';
 import { projectUploadDataSource } from './project/uploadData';
 import { projectDeleteDataSource } from './project/deleteData';
+import { projectGetData } from './project/getData';
 
 
 interface MulterRequest extends Request {
@@ -245,6 +246,20 @@ app.post('/project/:id/send', authenticateToken, async (req: Request, res: Respo
     const message = await projectSendMessage(userId, projectId, content);
 
     res.status(200).json(message);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Get a file from a project
+app.get('/project/data/:id', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const dataId = req.params.id;
+
+    const url = await projectGetData(dataId);
+
+    res.status(200).json(url);
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
