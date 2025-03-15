@@ -1,7 +1,8 @@
 import { uploadDataSource } from "../helper/dataHelper";
 import { getProjectById } from "../helper/projectHelper";
 
-export async function projectUploadDataSource(userId: string, projectId: string, fileBuffer: Buffer, fileName: string) {
+export async function projectUploadDataSource(userId: string, projectId: string, fileBuffer: Buffer | undefined, fileName: string | undefined) {
+  if (!fileBuffer || !fileName) throw { status: 400, message: "No file provided." }
   const project = await getProjectById(projectId);
   if (project === null) throw { status: 404, message: "Project not found." };
 
