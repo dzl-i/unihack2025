@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { BarChart, MessageSquareTextIcon, Upload, Users } from "lucide-react";
 import { useRef } from "react";
@@ -8,8 +7,11 @@ import StarGrid from "./StarGrid";
 import Logo from "../logo";
 import { useIsVisible } from "@/hooks/useIsVisible";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
+  const router = useRouter();
+
   const ref1 = useRef(null);
   const isVisible1 = useIsVisible(ref1);
   const ref2 = useRef(null);
@@ -24,17 +26,22 @@ export default function LandingPage() {
         <div className="flex items-center gap-2">
           <Logo width={32} height={32} />
           <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">
-            App Name
+            CollabAI
           </h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
-            className="bg-purple-gradient border-foreground/15"
+            className="border-foreground/15"
             variant="default"
+            onClick={() => router.push("/login")}
           >
             Login
           </Button>
-          <Button className="border-foreground/15" variant="ghost">
+          <Button
+            className="border-foreground/15"
+            variant="ghost"
+            onClick={() => router.push("/signup")}
+          >
             Register
           </Button>
         </div>
@@ -154,15 +161,13 @@ export default function LandingPage() {
             <div className="bg-purple-gradient shadow-purple-gradient inline-block p-3 rounded-lg">
               <Logo width={48} height={48} />
             </div>
-            <h1 className="text-4xl font-semibold">Get Started Now</h1>
+            <h1 className="text-4xl font-semibold">Get Started Now!</h1>
             <p className="opacity-50">
               Begin your journey in minutes, not days. Simply upload your
               documents, ask your first question, and watch as your information
               transforms into an interactive knowledge hub.
             </p>
-            <Button className="bg-purple-gradient" variant="default">
-              Get Started
-            </Button>
+            <Button variant="default">Get Started</Button>
           </div>
           <div className="glow absolute left-1/2 top-1/2 -z-10 aspect-square w-full max-w-sm -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-purple-800/35 blur-3xl filter transition-all"></div>
         </div>

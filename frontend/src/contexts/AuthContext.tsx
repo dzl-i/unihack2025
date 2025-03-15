@@ -22,7 +22,12 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: undefined,
+  setUser: () => {},
+  isLoading: false,
+  isAuthenticated: false,
+});
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { getCookie } = useCookiesNext();
