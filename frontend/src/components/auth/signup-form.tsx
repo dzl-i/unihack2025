@@ -83,7 +83,7 @@ export function SignupForm() {
     <>
       <div className="mb-10">
         <h3 className="text-3xl font-medium mb-4">
-          Let's get <i className="font-light">you</i> started
+          Let&apos;s get <i className="font-light">you</i> started
         </h3>
         <p className="text-sm font-light text-muted-foreground">
           Create an account and start making notes with friends

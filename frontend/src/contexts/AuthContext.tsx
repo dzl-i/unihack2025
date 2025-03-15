@@ -41,7 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // just decode it to read the payload
       try {
         // This only decodes the JWT payload without verification
-        const decoded = jwt.decode(token) as JwtPayload;
+        // const decoded = jwt.decode(token) as JwtPayload;
+        jwt.decode(token) as JwtPayload;
         
         // Alternatively, fetch user profile from backend
         fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/profile`, {

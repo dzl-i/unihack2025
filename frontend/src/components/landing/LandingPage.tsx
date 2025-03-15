@@ -97,13 +97,13 @@ export default function LandingPage() {
               <div className="flex gap-2">
                 <Upload className="mx-auto block size-12 bg-purple-gradient-bottom p-3 rounded-xl shadow-purple-gradient" />
                 <h3 className="text-lg font-bold flex-grow">
-                  Bring All Your Stuff - We'll Handle It
+                  Bring All Your Stuff - We&apos;ll Handle It
                 </h3>
               </div>
               <p className="text-sm opacity-50">
                 No matter what format your knowledge lives in – PDFs, diagrams,
                 or presentations – simply upload and let our smart system
-                organize everything. We'll index it all so you can find exactly
+                organize everything. We&apos;ll index it all so you can find exactly
                 what you need when you need it
               </p>
             </div>
