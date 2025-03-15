@@ -6,13 +6,15 @@ import cors from 'cors';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
-import { Server } from 'http';
+import { get, Server } from 'http';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Server as SocketIOServer } from 'socket.io';
 import multer from 'multer';
+import { parse } from 'cookie';
 
 // Helper functions
 import { deleteToken, generateToken } from './helper/tokenHelper';
+import { getUserById } from './helper/userHelper';
 
 // Route imports
 import { authRegister } from './auth/register';
@@ -132,23 +134,6 @@ app.post('/auth/logout', authenticateToken, async (req: Request, res: Response) 
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
   }
-});
-
-
-///////////////////////// Socket.io /////////////////////////
-
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('chat message', msg);
-  });
 });
 
 
@@ -285,6 +270,79 @@ app.delete('/project/data/:id', authenticateToken, async (req: Request, res: Res
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
   }
+});
+
+
+///////////////////////// Socket.io /////////////////////////
+
+
+io.use(async (socket, next) => {
+  const rawCookies = socket.request.headers.cookie;
+  const parsedCookies = parse(rawCookies || '');
+
+  const accessToken = parsedCookies['accessToken'];
+
+  try {
+    // Verifying the token
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_JWT_SECRET as string) as JwtPayload;
+    socket.data.userId = decoded.userId;
+
+    const user = await getUserById(decoded.userId);
+    if (!user) throw next(new Error('User not found'));
+    
+    socket.data.user = user;
+
+    next();
+  } catch (err) {
+    next(new Error('Authentication error'));
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log(`User ${socket.data.userId} (${socket.data.user.name}) connected`);
+
+  // Join a project room
+  socket.on('join', (projectId) => {
+    socket.join(projectId);
+    socket.to(projectId).emit('userJoined', {
+      userId: socket.data.userId,
+      name: socket.data.user.name
+    });
+    console.log(`User joined project: ${projectId}`);
+  });
+
+  // Leave a project room
+  socket.on('leave', (projectId) => {
+    socket.leave(projectId);
+    socket.to(projectId).emit('userLeft', {
+      userId: socket.data.userId,
+      name: socket.data.user.name
+    });
+    console.log(`User left project: ${projectId}`);
+  });
+
+  // Upload a data source
+  socket.on('upload', (projectId, data) => {
+    console.log(`User uploaded data to project: ${projectId}`);
+    io.to(projectId).emit('upload', data);
+  });
+
+  // Delete a data source
+  socket.on('delete', (projectId, dataId) => {
+    console.log(`User deleted data from project: ${projectId}`);
+    io.to(projectId).emit('delete', dataId);
+  });
+
+  // Send a message/prompt
+  socket.on('message', async (projectId, content) => {
+    console.log(`User sent message to project: ${projectId}`);
+    const message = await projectSendMessage(socket.data.userId, projectId, content);
+    io.to(projectId).emit('message', message); // TODO: Add the response from Langflow API
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`user ${socket.data.user.name} disconnected`);
+  });
 });
 
 
