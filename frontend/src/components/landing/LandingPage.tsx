@@ -25,7 +25,7 @@ export default function LandingPage() {
       <nav className="flex items-center justify-between p-8">
         <div className="flex items-center gap-2">
           <Logo width={32} height={32} />
-          <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">
+          <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75 cursor-default">
             CollabAI
           </h1>
         </div>

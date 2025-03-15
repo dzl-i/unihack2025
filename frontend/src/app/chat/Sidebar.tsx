@@ -8,44 +8,68 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { Loader, User } from "lucide-react";
-import { WorkspaceDropdown } from "./WorkspaceDropdown";
+import { Loader, User, Users } from "lucide-react";
+import { Workspace, WorkspaceDropdown } from "./WorkspaceDropdown";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
-import DataSourcesList from "./DataSourcesList";
 import Logo from "@/components/logo";
+import useQuery from "@/hooks/useRequest";
+import DataSourcesList from "./DataSourcesList";
+import { DocumentFile } from "./DocumentViewerSidebar";
 
-const data = {
-  workspaces: [
-    {
-      name: "Personal",
-      icon: User,
-    },
-  ],
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    profilePic: "",
-  },
-};
+export function Sidebar({
+  setSelectedFile,
+}: {
+  setSelectedFile: (file?: DocumentFile) => void;
+}) {
+  const { data: user } = useQuery("/user/profile");
+  const { data: workspaces, refetch: refetchWorkspaces } =
+    useQuery("/project/list");
+  const [activeWorkspace, setActiveWorkspace] = React.useState<
+    Workspace | undefined
+  >(undefined);
 
-export function Sidebar({ onFileSelect }: { onFileSelect: (url: string) => void }) {
+  const normalizedWorkspaces = React.useMemo(
+    () =>
+      workspaces != null
+        ? workspaces.map(
+            (workspace: Partial<{ name: string; isShared: boolean }>) => ({
+              name: workspace.name,
+              icon: workspace.isShared ? Users : User,
+            })
+          )
+        : [],
+    [workspaces]
+  );
+
+  React.useEffect(() => {
+    if (normalizedWorkspaces != null && activeWorkspace == null) {
+      setActiveWorkspace(normalizedWorkspaces[0]);
+    }
+  }, [activeWorkspace, normalizedWorkspaces]);
+
   return (
     <ShadcnSidebar>
       <SidebarHeader className="p-4">
-        <div className="flex gap-2 mb-2">
+        <div className="flex gap-2 mb-2 cursor-default">
           <Logo />
           <p className="font-bold group-data-[collapsible=icon]:hidden text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">
             CollabAI
           </p>
         </div>
         <div className="group-data-[collapsible=icon]:hidden">
-          <WorkspaceDropdown workspaces={data.workspaces} />
+          <WorkspaceDropdown
+            activeWorkspace={activeWorkspace}
+            setActiveWorkspace={setActiveWorkspace}
+            workspaces={normalizedWorkspaces}
+            refetchWorkspaces={refetchWorkspaces}
+          />
         </div>
       </SidebarHeader>
-      <SidebarSeparator className="mx-0 my-2" />
+      <div className="px-4 w-full">
+        <div className="h-px bg-input w-full"></div>
+      </div>
       <SidebarContent className="p-2">
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <Suspense
@@ -55,13 +79,13 @@ export function Sidebar({ onFileSelect }: { onFileSelect: (url: string) => void 
               </div>
             }
           >
-            <DataSourcesList onFileSelect={onFileSelect} />
+            <DataSourcesList onFileSelected={setSelectedFile} />
           </Suspense>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="space-y-2 group-data-[collapsible=icon]:hidden p-4">
         <AddCollaboratorsDialog />
-        <ProfileDropdown user={data.user} />
+        <ProfileDropdown user={user} />
       </SidebarFooter>
     </ShadcnSidebar>
   );

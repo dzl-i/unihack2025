@@ -12,6 +12,11 @@ import { Server as SocketIOServer } from 'socket.io';
 import multer from 'multer';
 import { parse } from 'cookie';
 
+// Swagger
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
+
 // Helper functions
 import { deleteToken, generateToken } from './helper/tokenHelper';
 import { getUserById } from './helper/userHelper';
@@ -64,6 +69,9 @@ app.use(cors({
 
 const PORT: number = parseInt(process.env.PORT || '3000');
 const isProduction: boolean = process.env.NODE_ENV === "production";
+
+const swaggerDocument = YAML.load(path.join(__dirname, '../api-docs.yaml'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 ///////////////////////// ROUTES /////////////////////////

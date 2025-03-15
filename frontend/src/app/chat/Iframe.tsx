@@ -7,6 +7,12 @@ type IFrameProps = React.ComponentPropsWithRef<"iframe"> & {
   fallback?: JSX.Element;
 };
 
+interface AwaiterRef {
+  promise: Promise<void> | null;
+  resolve: () => void;
+  reject: () => void;
+}
+
 export function IFrame(props: IFrameProps) {
   const { fallback, ...rest } = props;
 
@@ -18,12 +24,9 @@ export function IFrame(props: IFrameProps) {
 }
 
 function IFrameImplementation(props: React.ComponentPropsWithRef<"iframe">) {
-  const awaiter = useRef<null | {
-    promise: null | Promise<void>;
-    resolve: () => void;
-    reject: () => void;
-  }>(null);
-  const [_, triggerLoad] = useState(false);
+  const awaiter = useRef<AwaiterRef | null>(null);
+  // Use void instead of _ to avoid the unused variable warning
+  const [, setLoading] = useState(false);
 
   if (awaiter.current?.promise) {
     throw awaiter.current.promise;
@@ -31,15 +34,18 @@ function IFrameImplementation(props: React.ComponentPropsWithRef<"iframe">) {
 
   useLayoutEffect(() => {
     if (awaiter.current === null) {
-      // @ts-ignore
-      awaiter.current = {};
-      // @ts-ignore
-      awaiter.current.promise = new Promise<void>((resolve, reject) => {
-        Object.assign(awaiter.current as object, { resolve, reject });
+      const newAwaiter: Partial<AwaiterRef> = {};
+
+      newAwaiter.promise = new Promise<void>((resolve, reject) => {
+        newAwaiter.resolve = resolve;
+        newAwaiter.reject = reject;
       });
-      triggerLoad(true);
+
+      awaiter.current = newAwaiter as AwaiterRef;
+      setLoading(true);
     }
   }, []);
+
   const { title } = props;
 
   return (
@@ -47,15 +53,17 @@ function IFrameImplementation(props: React.ComponentPropsWithRef<"iframe">) {
       {...props}
       title={title}
       onLoad={(e) => {
-        // @ts-ignore
-        awaiter.current.promise = null;
-        awaiter.current?.resolve();
+        if (awaiter.current) {
+          awaiter.current.promise = null;
+          awaiter.current.resolve();
+        }
         props.onLoad?.(e);
       }}
       onError={(err) => {
-        // @ts-ignore
-        awaiter.current.promise = null;
-        awaiter.current?.reject();
+        if (awaiter.current) {
+          awaiter.current.promise = null;
+          awaiter.current.reject();
+        }
         props.onError?.(err);
       }}
     />

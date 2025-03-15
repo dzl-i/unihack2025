@@ -1,0 +1,400 @@
+openapi: 3.0.0
+info:
+  title: CollabAI Backend API
+  description: API documentation for the CollabAI application
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /:
+    get:
+      summary: Health check
+      description: Check if the server is running
+      responses:
+        '200':
+          description: Server is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Server is up!"
+
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - username
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securepassword"
+                username:
+                  type: string
+                  example: "johndoe"
+                profilePic:
+                  type: string
+                  description: Base64 encoded image (optional)
+      responses:
+        '200':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  profilePic:
+                    type: string
+
+  /auth/login:
+    post:
+      summary: Login a user
+      description: Authenticate user credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securepassword"
+      responses:
+        '200':
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  profilePic:
+                    type: string
+
+  /auth/logout:
+    post:
+      summary: Logout a user
+      description: End user session
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User successfully logged out
+
+  /user/profile:
+    get:
+      summary: Get user profile
+      description: Retrieve the current user's profile information
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  profilePic:
+                    type: string
+
+  /project:
+    post:
+      summary: Create a new project
+      description: Create a new project
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "My Project"
+      responses:
+        '200':
+          description: Project successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /project/list:
+    get:
+      summary: List all projects for a user
+      description: Get all projects that the user is a member of
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+
+  /project/{id}:
+    get:
+      summary: Get details of a project
+      description: Retrieve detailed information about a specific project
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      summary: Delete a project
+      description: Remove a project from the system
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /project/join:
+    post:
+      summary: Join a project
+      description: Join an existing project using its code
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+              properties:
+                code:
+                  type: string
+                  example: "ABC123"
+      responses:
+        '200':
+          description: Successfully joined project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /project/{id}/send:
+    post:
+      summary: Send a message to a project
+      description: Add a new message to the project chat
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example: "Hello team!"
+      responses:
+        '200':
+          description: Message successfully sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /project/{id}/upload:
+    post:
+      summary: Upload a file to a project
+      description: Upload a data source file to a project
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: File successfully uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+
+  /project/data/{id}:
+    delete:
+      summary: Delete a file from a project
+      description: Remove a data source from a project
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: JWT Authentication using HTTP cookies
+
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        profilePic:
+          type: string
+
+    Project:
+      type: object
+      properties:
+        projectId:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        isShared:
+          type: boolean
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        dataSources:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSource'
+
+    Message:
+      type: object
+      properties:
+        messageId:
+          type: string
+        content:
+          type: string
+        sender:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+
+    DataSource:
+      type: object
+      properties:
+        dataSourceId:
+          type: string
+        name:
+          type: string
