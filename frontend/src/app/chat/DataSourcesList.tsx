@@ -15,12 +15,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { DocumentFile } from "./DocumentViewerSidebar";
 
 export type Data = {
   name: string;
   description: string;
   fileType: string;
-  url?: string;
+  url: string;
 };
 
 const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
@@ -30,7 +31,11 @@ const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
   }
 };
 
-export default function DataSourcesList() {
+export default function DataSourcesList({
+  onFileSelected,
+}: {
+  onFileSelected: (file: DocumentFile) => void;
+}) {
   const [datas] = useState<Data[]>([]);
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -113,7 +118,7 @@ export default function DataSourcesList() {
               key={index}
               variant="ghost"
               className="w-full h-auto"
-              // TODO: Open document viewer
+              onClick={() => onFileSelected({ name: data.name, url: data.url })}
             >
               <dataIcon.icon className="min-w-6 min-h-6" />
               <div className="min-w-0 flex-1 text-left">
