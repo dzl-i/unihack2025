@@ -39,7 +39,6 @@ export default function Page() {
       {showDetails && selectedFile && (
         <DocumentViewerSidebar
           file={selectedFile}
-          showDetails={showDetails}
           setShowDetails={setShowDetails}
         />
       )}
