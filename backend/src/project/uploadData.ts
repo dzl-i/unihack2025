@@ -35,11 +35,20 @@ export async function projectUploadDataSource(userId: string, projectId: string,
       message: "An error occurred while uploading to S3: " + err,
     };
   }
+  console.log('file uploaded successfully')
 
+  // create astra collection if it doesn't exist
+
+
+
+  // create connectors for src and dest, 
   try {
     const source_connector_id = await createSourceConnector(projectId)
+    console.log("created source connector")
     const dest_connector_id = await createDestConnector(projectId, "default_keyspace")
+    console.log("created dest connector")
     const workflow_id = await createWorkflow(source_connector_id, dest_connector_id)
+    console.log("created workflow")
     await runWorkflow(workflow_id)
   } catch (err) {
     throw {
@@ -47,6 +56,8 @@ export async function projectUploadDataSource(userId: string, projectId: string,
       message: "An error occured with unstructured: " + err,
     }
   }
+  console.log('workflow triggered successfully')
+
 
   const data = await uploadDataSource(projectId, originalname);
   if (data === null) throw { status: 400, message: "Failed to upload data source." };

@@ -1,12 +1,8 @@
-import { headers, unstructured_api_url } from "./unstructuredClient"
+import { headers, unstructured_api_url } from "./unstructured"
 
-interface WorkflowInfo {
-    id: string;
-  }
-  
-  interface CreateWorkflowResponse {
-    workflow_information: WorkflowInfo;
-  }
+interface CreateWorkflowResponse {
+id: string;
+}
 
 const partition_node = {
     name: "Partitioner",
@@ -96,11 +92,12 @@ export async function createWorkflow(source_id:string, destination_id:string) {
         method: 'POST',
         headers,
         body
-        })
+    })
 
-    if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
+    if (!response.ok) throw { status: 500, message: "Couldn't create workflow"}
     const data = await response.json() as CreateWorkflowResponse;
-    return data.workflow_information.id;
+    console.log(data)
+    return data.id;
 
 }
 

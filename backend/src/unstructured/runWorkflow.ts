@@ -1,4 +1,4 @@
-import { headers, unstructured_api_key, unstructured_api_url } from "./unstructuredClient";
+import { headers, unstructured_api_key, unstructured_api_url } from "./unstructured";
 
 // returns job id
 export async function runWorkflow(workflow_id:string) {

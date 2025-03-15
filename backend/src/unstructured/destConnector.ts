@@ -1,22 +1,20 @@
-import dotenv from 'dotenv';
-import { api_endpoint, headers, token, unstructured_api_url } from './unstructuredClient';
+import { api_endpoint, headers, token, unstructured_api_url } from './unstructured';
 
-interface DestConnectorInfo {
+interface CreateDestResponse {
   id: string;
 }
 
-interface CreateDestResponse {
-  destination_connector_information: DestConnectorInfo;
-}
-
-dotenv.config();
-
-// createDestConnector("test", "default_keyspace")
+// collection_name can only contain characters
 export async function createDestConnector(collection_name: string, keyspace: string): Promise<string> {
   const body = JSON.stringify({
-    name: collection_name,
+    name: `astradb-dest-abc`,
     type: "astradb",
-    config: { token, api_endpoint, collection_name, keyspace }
+    config: { 
+      token,
+      api_endpoint, 
+      collection_name:"test", 
+      keyspace 
+    }
   });
 
   const response = await fetch(`${unstructured_api_url}/destinations`, {
@@ -27,6 +25,7 @@ export async function createDestConnector(collection_name: string, keyspace: str
 
   if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
   const data = await response.json() as CreateDestResponse;
-  return data.destination_connector_information.id;
+  console.log(data)
+  return data.id;
 
 }

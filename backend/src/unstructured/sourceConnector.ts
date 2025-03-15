@@ -1,12 +1,8 @@
 import dotenv from 'dotenv';
-import { unstructured_api_url, headers } from './unstructuredClient';
-
-interface SourceConnectorInfo {
-  id: string;
-}
+import { unstructured_api_url, headers } from './unstructured';
 
 interface CreateSourceResponse {
-  source_connector_information: SourceConnectorInfo;
+  id: string;
 }
 
 dotenv.config();
@@ -34,6 +30,7 @@ export async function createSourceConnector(inputPath:string): Promise<string> {
 
   if (!response.ok) throw { status: 500, message: "Couldn't create source connector"}
   const data = await response.json() as CreateSourceResponse;
-  return data.source_connector_information.id;
+  console.log(data)
+  return data.id;
 
 }
