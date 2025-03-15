@@ -15,6 +15,7 @@ import DocumentViewerSidebar, { DocumentFile } from "../DocumentViewerSidebar";
 import useQuery from "@/hooks/useRequest";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import ChatWidget from "../ChatWidget";
 
 export default function Page() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function Page() {
             Graph View
           </Button>
         </header>
-        {/* Main content/chatbot */}
+        <ChatWidget projectId={projectId} />
       </SidebarInset>
       {showDetails && selectedFile && (
         <DocumentViewerSidebar
