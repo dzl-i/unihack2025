@@ -35,6 +35,7 @@ export function Sidebar({
       workspaces != null
         ? workspaces.map(
             (workspace: Partial<{ name: string; isShared: boolean }>) => ({
+              projectId: workspace.projectId,
               name: workspace.name,
               icon: workspace.isShared ? Users : User,
             })

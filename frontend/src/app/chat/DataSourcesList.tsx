@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { DocumentFile } from "./DocumentViewerSidebar";
+import { useParams } from "next/navigation";
+import { request } from "@/hooks/useRequest";
 
 export type Data = {
   name: string;
@@ -36,7 +38,8 @@ export default function DataSourcesList({
 }: {
   onFileSelected: (file: DocumentFile) => void;
 }) {
-  const [datas] = useState<Data[]>([]);
+  const { project_id } = useParams();
+  const [datas, setDatas] = useState<Data[]>([]);
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -49,21 +52,20 @@ export default function DataSourcesList({
     setIsUploading(true);
 
     try {
-      // TODO: Request to backend
-      //   const formData = new FormData();
-      //   formData.append("file", files[0]);
+      // Now using the dynamic project_id from URL parameters
+      const formData = new FormData();
+      formData.append("file", files[0]);
 
-      //   const { data, error } = await request("POST", "/project/:id/upload", {
-      //     body: formData,
-      //   });
+      const { data, error } = await request("POST", `/project/${project_id}/upload`, {
+        body: formData,
+      });
 
-      //   if (error) {
-      //     toast.error("Failed to upload files");
-      //   } else {
-      //     setDatas((prev) => [...prev, data]);
-      //     toast.success("File uploaded successfully");
-      //   }
-      toast.success("File uploaded successfully");
+      if (error) {
+        toast.error("Failed to upload files");
+      } else {
+        setDatas((prev) => [...prev, data]);
+        toast.success("File uploaded successfully");
+      }
     } catch (err) {
       toast.error("Something is wrong. Try again");
       console.error(err);
