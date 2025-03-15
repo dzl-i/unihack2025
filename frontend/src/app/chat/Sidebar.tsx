@@ -31,11 +31,9 @@ const data = {
   },
 };
 
-export function Sidebar({
-  ...props
-}: React.ComponentProps<typeof ShadcnSidebar>) {
+export function Sidebar({ onFileSelect }: { onFileSelect: (url: string) => void }) {
   return (
-    <ShadcnSidebar {...props}>
+    <ShadcnSidebar>
       <SidebarHeader className="p-4">
         <div className="flex justify-between items-center mb-2">
           <p className="font-bold group-data-[collapsible=icon]:hidden">
@@ -56,7 +54,7 @@ export function Sidebar({
               </div>
             }
           >
-            <DataSourcesList />
+            <DataSourcesList onFileSelect={onFileSelect} />
           </Suspense>
         </SidebarGroup>
       </SidebarContent>
