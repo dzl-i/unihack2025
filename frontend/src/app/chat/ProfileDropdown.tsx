@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, Loader, LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -31,8 +31,7 @@ import { Button } from "@/components/ui/button";
 import { convertNameToAbbreviation } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { request } from "@/hooks/useRequest";
-import { Suspense, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 export type User = {
   name: string;

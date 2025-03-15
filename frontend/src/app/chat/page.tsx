@@ -8,10 +8,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Loader, TrendingUp } from "lucide-react";
-import { getFileViewerLink } from "@/lib/utils";
-import IFrame from "./Iframe";
-import { Suspense, useState } from "react";
+import { TrendingUp } from "lucide-react";
+// import { Loader, TrendingUp } from "lucide-react";
+// import { getFileViewerLink } from "@/lib/utils";
+// import IFrame from "./Iframe";
+// import { Suspense, useState } from "react";
 
 export default function Page() {
   return (

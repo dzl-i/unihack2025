@@ -41,7 +41,7 @@ export function Sidebar() {
     if (normalizedWorkspace != null && activeWorkspace == null) {
       setActiveWorkspace(normalizedWorkspace[0]);
     }
-  }, [normalizedWorkspace]);
+  }, [activeWorkspace, normalizedWorkspace]);
 
   return (
     <ShadcnSidebar>

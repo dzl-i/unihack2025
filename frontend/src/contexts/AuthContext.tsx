@@ -6,7 +6,7 @@ import {
   useEffect,
 } from "react";
 import { useCookiesNext } from "cookies-next";
-import jwt, {JwtPayload} from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface User {
   userId: string;
@@ -43,25 +43,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // This only decodes the JWT payload without verification
         // const decoded = jwt.decode(token) as JwtPayload;
         jwt.decode(token) as JwtPayload;
-        
+
         // Alternatively, fetch user profile from backend
         fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/profile`, {
-          credentials: 'include',
+          credentials: "include",
         })
-        .then(res => {
-          if (res.ok) return res.json();
-          throw new Error('Failed to fetch user profile');
-        })
-        .then(userData => {
-          setUser(userData);
-        })
-        .catch(err => {
-          console.error("Auth error:", err);
-          setUser(undefined);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+          .then((res) => {
+            if (res.ok) return res.json();
+            throw new Error("Failed to fetch user profile");
+          })
+          .then((userData) => {
+            setUser(userData);
+          })
+          .catch((err) => {
+            console.error("Auth error:", err);
+            setUser(undefined);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       } catch (error) {
         console.error("Error decoding token:", error);
         setUser(undefined);
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [getCookie]);
 
   const value = {
     user,

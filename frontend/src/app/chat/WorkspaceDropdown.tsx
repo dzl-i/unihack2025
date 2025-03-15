@@ -28,7 +28,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import useQuery, { request } from "@/hooks/useRequest";
+import { request } from "@/hooks/useRequest";
 import { toast } from "sonner";
 
 export type Workspace = {
@@ -62,8 +62,8 @@ export function WorkspaceDropdown({
     setError("");
 
     try {
-      const { data, error } = await request("POST", "/project", {
-        name: input,
+      const { error } = await request("POST", "/project", {
+        name,
       });
 
       if (error) {
