@@ -16,10 +16,11 @@ import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
 import Logo from "@/components/logo";
 import useQuery from "@/hooks/useRequest";
+import DataSourcesList from "./DataSourcesList";
 
 export function Sidebar() {
   const { data: user } = useQuery("/user/profile");
-  const { data: workspaces } = useQuery("/project/list");
+  const { data: workspaces, refetch: refetchWorkspaces } = useQuery("/project/list");
   const [activeWorkspace, setActiveWorkspace] = React.useState<
     Workspace | undefined
   >(undefined);
@@ -57,6 +58,7 @@ export function Sidebar() {
             activeWorkspace={activeWorkspace}
             setActiveWorkspace={setActiveWorkspace}
             workspaces={normalizedWorkspace}
+            refetchWorkspaces={refetchWorkspaces}
           />
         </div>
       </SidebarHeader>
@@ -70,7 +72,7 @@ export function Sidebar() {
               </div>
             }
           >
-            {/* <DataSourcesList /> */}
+            <DataSourcesList />
           </Suspense>
         </SidebarGroup>
       </SidebarContent>

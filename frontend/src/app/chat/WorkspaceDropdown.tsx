@@ -40,10 +40,12 @@ export function WorkspaceDropdown({
   activeWorkspace,
   setActiveWorkspace,
   workspaces,
+  refetchWorkspaces,
 }: {
   activeWorkspace: Workspace | undefined;
   setActiveWorkspace: (workspace: Workspace | undefined) => void;
   workspaces: Workspace[];
+  refetchWorkspaces: () => void;
 }) {
   const { isMobile } = useSidebar();
 
@@ -72,6 +74,7 @@ export function WorkspaceDropdown({
       }
 
       setOpen(false);
+      refetchWorkspaces();
 
       toast("Project created!", {
         action: {
@@ -160,6 +163,7 @@ export function WorkspaceDropdown({
                   variant="default"
                   onClick={() => createProject(input)}
                   disabled={!isReadyToSubmit || isLoading}
+                  className="bg-purple-gradient-right hover:opacity-85 transition:opacity"
                 >
                   {isLoading ? "Creating..." : "Create Project"}
                 </Button>

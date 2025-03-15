@@ -1,6 +1,6 @@
 "use client";
 
-import { File, Search, Trash2, Upload } from "lucide-react";
+import { File, Loader, Search, Trash2, Upload } from "lucide-react";
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
 };
 
 export default function DataSourcesList() {
-  const [datas, setDatas] = useState<Data[]>([]);
+  const [datas] = useState<Data[]>([]);
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -44,34 +44,24 @@ export default function DataSourcesList() {
     setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", files[0]);
+      // TODO: Request to backend
+      //   const formData = new FormData();
+      //   formData.append("file", files[0]);
 
-      const response = await fetch("http://localhost:3000/project/1/upload", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          // Don't set Content-Type when sending FormData
-          // Let the browser set it with the correct boundary
-        },
-        body: formData,
-      });
+      //   const { data, error } = await request("POST", "/project/:id/upload", {
+      //     body: formData,
+      //   });
 
-      const responseText = await response.text();
-      console.log("Response:", responseText);
-
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.status} - ${responseText}`);
-      }
-
-      const data = JSON.parse(responseText);
-      setDatas((prev) => [...prev, data]);
+      //   if (error) {
+      //     toast.error("Failed to upload files");
+      //   } else {
+      //     setDatas((prev) => [...prev, data]);
+      //     toast.success("File uploaded successfully");
+      //   }
       toast.success("File uploaded successfully");
-    } catch (error: unknown) {
-      console.error("Upload error:", error);
-      const message =
-        error instanceof Error ? error.message : "Unknown error occurred";
-      toast.error("Failed to upload file: " + message);
+    } catch (err) {
+      toast.error("Something is wrong. Try again");
+      console.error(err);
     } finally {
       setIsUploading(false);
     }
@@ -93,24 +83,26 @@ export default function DataSourcesList() {
       </div>
       {/* Simplified upload button */}
       <div className="w-full">
+        <Button
+          className="w-full p-0"
+          variant="secondary"
+          disabled={isUploading}
+        >
+          <label
+            className="flex gap-2 items-center justify-center p-2 w-full"
+            htmlFor="file-upload"
+          >
+            {isUploading ? <Loader className="animate-spin" /> : <Upload />}
+            {isUploading ? "Uploading..." : "Add Data Source"}
+          </label>
+        </Button>
         <input
           id="file-upload"
           type="file"
           className="hidden"
-          accept=".pdf,.png,.jpg,.jpeg,.txt"
+          accept=".pdf,.png,.jpg,.jpeg,.txt,.md,.docx"
           onChange={handleFileUpload}
         />
-        <label htmlFor="file-upload">
-          <Button
-            className="w-full"
-            variant="secondary"
-            disabled={isUploading}
-            onClick={() => document.getElementById("file-upload")?.click()}
-          >
-            <Upload className={isUploading ? "animate-spin" : ""} />
-            {isUploading ? "Uploading..." : "Add Data Source"}
-          </Button>
-        </label>
       </div>
       {/* Data source list */}
       <div className="overflow-y-auto">
@@ -121,7 +113,7 @@ export default function DataSourcesList() {
               key={index}
               variant="ghost"
               className="w-full h-auto"
-              //   onClick={() => data.url}
+              // TODO: Open document viewer
             >
               <dataIcon.icon className="min-w-6 min-h-6" />
               <div className="min-w-0 flex-1 text-left">
