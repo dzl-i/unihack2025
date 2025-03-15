@@ -8,7 +8,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Loader, User, Users } from "lucide-react";
 import { Workspace, WorkspaceDropdown } from "./WorkspaceDropdown";
