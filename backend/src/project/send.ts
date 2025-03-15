@@ -14,6 +14,7 @@ export async function projectSendMessage(userId: string, projectId: string, cont
   const message = await sendMessage(userId, projectId, content);
   if (message === null) throw { status: 400, message: "Failed to send message." };
 
+
   const requestBody = {
     input_value: content,
     output_type: "chat",
@@ -32,12 +33,18 @@ export async function projectSendMessage(userId: string, projectId: string, cont
     },
   };
 
+  const headers = {
+    "Authorization": `Bearer ${process.env.LANGFLOW_TOKEN!}`,
+    "Content-Type": "application/json",
+    "x-api-key": process.env.LANGFLOW_KEY!,
+  }
+
+  console.log(requestBody);
+  console.log(headers)
+
   const response = await fetch(process.env.LANGFLOW_URL!, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.LANGFLOW_KEY!}`,
-    },
+    headers,
     body: JSON.stringify(requestBody),
   });
 
@@ -45,13 +52,28 @@ export async function projectSendMessage(userId: string, projectId: string, cont
     return { status: 400, message: "Failed to retrieve a response" };
   }
 
-  const data: any = await response.json();
+  const responseText = await response.text();
+  console.log("Response Text:", responseText);
 
-  // we ball
-  const output = data.outputs?.[0]?.outputs?.[0]?.results?.message?.data?.text;
-  if (!output) {
-    return { status: 400, message: "Failed to retrieve a response" };
+  // console.log(response);
+  // const data: any = await response.json();
+  // console.log(data);
+  // console.log("hii");
+
+  try {
+    const data = JSON.parse(responseText);
+    console.log("Parsed Data:", data);
+
+  } catch (e) {
+    console.error("Error parsing response:", e);
   }
+
+
+  // // we ball
+  // const output = data.outputs?.[0]?.outputs?.[0]?.results?.message?.data?.text;
+  // if (!output) {
+  //   return { status: 400, message: "Failed to retrieve a response" };
+  // }
 
   return message
 }
