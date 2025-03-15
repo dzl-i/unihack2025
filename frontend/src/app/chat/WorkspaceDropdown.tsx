@@ -160,6 +160,7 @@ export function WorkspaceDropdown({
                   variant="default"
                   onClick={() => createProject(input)}
                   disabled={!isReadyToSubmit || isLoading}
+                  className="bg-purple-gradient-right hover:opacity-85 transition:opacity"
                 >
                   {isLoading ? "Creating..." : "Create Project"}
                 </Button>
