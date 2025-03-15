@@ -95,8 +95,8 @@ app.post('/auth/register', async (req: Request, res: Response) => {
     const user = await authRegister(name, email, password, username, profilePic || process.env.PROFILE_PIC_BASE64 as string);
 
     // Assign cookies
-    res.cookie('accessToken', user.accessToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost", maxAge: 1800000 });
-    res.cookie('refreshToken', user.refreshToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost", maxAge: 7776000000 });
+    res.cookie('accessToken', user.accessToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost", maxAge: 1800000 });
+    res.cookie('refreshToken', user.refreshToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost", maxAge: 7776000000 });
 
     res.header('Access-Control-Allow-Credentials', 'true');
 
@@ -114,8 +114,8 @@ app.post('/auth/login', async (req: Request, res: Response) => {
     const user = await authLogin(email, password);
 
     // Assign cookies
-    res.cookie('accessToken', user.accessToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost", maxAge: 1800000 });
-    res.cookie('refreshToken', user.refreshToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost", maxAge: 7776000000 });
+    res.cookie('accessToken', user.accessToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost", maxAge: 1800000 });
+    res.cookie('refreshToken', user.refreshToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost", maxAge: 7776000000 });
 
     res.header('Access-Control-Allow-Credentials', 'true');
 
@@ -134,8 +134,8 @@ app.post('/auth/logout', authenticateToken, async (req: Request, res: Response) 
     await authLogout(refreshToken);
 
     // Assign cookies
-    res.clearCookie('accessToken', { domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost" });
-    res.clearCookie('refreshToken', { domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost" });
+    res.clearCookie('accessToken', { domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost" });
+    res.clearCookie('refreshToken', { domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost" });
 
     res.sendStatus(200);
   } catch (error: any) {
@@ -411,8 +411,8 @@ async function authenticateToken(req: Request, res: Response, next: NextFunction
         await deleteToken(refreshToken);
 
         // Set new cookies
-        res.cookie('accessToken', newTokens.accessToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost", maxAge: 1800000 });
-        res.cookie('refreshToken', newTokens.refreshToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "studysync.denzeliskandar.com" : ".localhost", maxAge: 7776000000 });
+        res.cookie('accessToken', newTokens.accessToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost", maxAge: 1800000 });
+        res.cookie('refreshToken', newTokens.refreshToken, { httpOnly: isProduction, path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax", domain: isProduction ? "collabai.denzeliskandar.com" : ".localhost", maxAge: 7776000000 });
 
         res.locals.userId = rtDecoded.userId;
         return next();
