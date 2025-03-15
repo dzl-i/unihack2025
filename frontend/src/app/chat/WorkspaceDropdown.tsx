@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ChevronDown, Plus } from "lucide-react";
+import { useRouter } from "next/navigation"; // Add this import
 
 import {
   DropdownMenu,
@@ -34,6 +35,7 @@ import { toast } from "sonner";
 export type Workspace = {
   name: string;
   icon: React.ElementType;
+  projectId: string;
 };
 
 export function WorkspaceDropdown({
@@ -48,6 +50,7 @@ export function WorkspaceDropdown({
   refetchWorkspaces: () => void;
 }) {
   const { isMobile } = useSidebar();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -59,12 +62,17 @@ export function WorkspaceDropdown({
     return null;
   }
 
+  const handleWorkspaceChange = (workspace: Workspace) => {
+    setActiveWorkspace(workspace);
+    router.push(`/chat/${workspace.projectId}`);
+  };
+
   const createProject = async (name: string) => {
     setIsLoading(true);
     setError("");
 
     try {
-      const { error } = await request("POST", "/project", {
+      const { data, error } = await request("POST", "/project", {
         name,
       });
 
@@ -75,6 +83,11 @@ export function WorkspaceDropdown({
 
       setOpen(false);
       refetchWorkspaces();
+
+      // If we get back the new project ID, navigate to it
+      if (data && data.projectId) {
+        router.push(`/chat/${data.projectId}`);
+      }
 
       toast("Project created!", {
         action: {
@@ -121,7 +134,7 @@ export function WorkspaceDropdown({
               {workspaces.map((workspace) => (
                 <DropdownMenuItem
                   key={workspace.name}
-                  onClick={() => setActiveWorkspace(workspace)}
+                  onClick={() => handleWorkspaceChange(workspace)}
                   className="gap-2 p-2 capitalize"
                 >
                   <div className="flex size-6 items-center justify-center rounded-md border">
