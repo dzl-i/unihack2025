@@ -33,8 +33,11 @@ export async function projectUploadDataSource(userId: string, projectId: string,
   }
 
   // TODO: Upload the file to Unstructured and retrieve the processed data
-
   // TODO: Upload the processed data to AstraDB
+  // createSourceConnector()
+  // createDestConnector()
+  // createWorkflow()
+  // workflow.run()
 
   const data = await uploadDataSource(projectId, originalname);
   if (data === null) throw { status: 400, message: "Failed to upload data source." };
