@@ -263,12 +263,7 @@ app.post('/project/:id/upload', authenticateToken, upload.single('file'), async 
   try {
     const userId = res.locals.userId;
     const projectId = req.params.id;
-
-    const fileBuffer = req.file?.buffer;
-    const fileName = req.file?.originalname;
-    const fileType = req.file?.mimetype; // not sure if S3 needs this
-
-    const file = await projectUploadDataSource(userId, projectId, fileBuffer, fileName, fileType);
+    const file = await projectUploadDataSource(userId, projectId, req.file);
 
     res.status(200).json(file);
   } catch (error: any) {
