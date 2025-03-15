@@ -376,7 +376,7 @@ io.on('connection', (socket) => {
   // Send a message/prompt
   socket.on('message', async (projectId, content) => {
     console.log(`User sent message to project: ${projectId}`);
-    const message = await projectSendMessage(socket.data.userId, projectId, content) || "Could not retrieve message";
+    const message = await projectSendMessage(socket.data.userId, projectId, content);
     io.to(projectId).emit('message', message); // TODO: Add the response from Langflow API
   });
 
