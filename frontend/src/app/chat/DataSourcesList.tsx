@@ -89,7 +89,7 @@ export default function DataSourcesList() {
           disabled={isUploading}
         >
           <label
-            className="flex gap-2 items-center justify-center p-2 w-full"
+            className="flex gap-2 items-center justify-center p-2 w-full cursor-pointer"
             htmlFor="file-upload"
           >
             {isUploading ? <Loader className="animate-spin" /> : <Upload />}

@@ -62,7 +62,9 @@ export function Sidebar() {
           />
         </div>
       </SidebarHeader>
-      <SidebarSeparator className="mx-0 my-2" />
+      <div className="px-4 w-full">
+        <div className="h-px bg-input w-full"></div>
+      </div>
       <SidebarContent className="p-2">
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <Suspense
