@@ -2,16 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-  BarChart,
-  BarChart3,
-  BookText,
-  List,
-  MessageSquareTextIcon,
-  TrendingUp,
-  Upload,
-  Users,
-} from "lucide-react";
+import { BarChart, MessageSquareTextIcon, Upload, Users } from "lucide-react";
 import { useRef } from "react";
 import StarGrid from "./StarGrid";
 import Logo from "../logo";
@@ -155,11 +146,11 @@ export default function LandingPage() {
         </div>
         <div
           ref={ref3}
-          className={`relative space-y-20 m-40 p-40 rounded-lg border broder-foreground/15 bg-foreground/5 text-center transition-opacity duration-700 ease-in ${
+          className={`relative space-y-20 h-[720px] md:m-12 m-8 flex justify-center items-center p-8 rounded-lg border broder-foreground/15 bg-foreground/5 text-center transition-opacity duration-700 ease-in ${
             isVisible3 ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="space-y-6 max-w-xl m-auto">
+          <div className="space-y-6 m-auto max-w-xl">
             <div className="bg-purple-gradient shadow-purple-gradient inline-block p-3 rounded-lg">
               <Logo width={48} height={48} />
             </div>

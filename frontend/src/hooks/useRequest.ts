@@ -21,16 +21,21 @@ export default function useQuery(url: string) {
 export const request = async (
   method: RequestMethod,
   url: string,
-  body?: any
+  body?: FormData | Record<string, unknown>
 ) => {
   try {
+    const headers: Record<string, string> = {};
+    
+    // Only set Content-Type for JSON data
+    if (!(body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
+
     const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + url, {
       method,
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      ...(body && { body: JSON.stringify(body) }),
+      headers,
+      body: body instanceof FormData ? body : JSON.stringify(body),
     });
 
     const data = await response.json().catch(() => null);
