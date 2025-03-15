@@ -162,7 +162,7 @@ export function SignupForm() {
           <div className="p-[2px] mt-10">
             <Button
               type="submit"
-              className="w-full bg-purple-gradient hover:bg-primary/90 flex items-center justify-center h-11 rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
+              className="w-full bg-purple-gradient-right hover:bg-primary/90 flex items-center justify-center h-11 rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
               disabled={isLoading}
             >
               <p className="font-semibold mt-[3px]">

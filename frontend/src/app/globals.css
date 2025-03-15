@@ -85,8 +85,11 @@
 }
 
 @layer utilities {
-  .bg-purple-gradient {
+  .bg-purple-gradient-bottom {
     background: linear-gradient(to bottom, #4c2faf, #a66eed);
+  }
+  .bg-purple-gradient-right {
+    background: linear-gradient(to right, #4c2faf, #a66eed);
   }
   .shadow-purple-gradient {
     box-shadow: 0px 4px 80px #a66eed;
