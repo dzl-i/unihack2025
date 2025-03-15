@@ -14,11 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export type Data = {
   name: string;
   description: string;
   fileType: string;
+  url?: string;
 };
 
 const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
@@ -29,8 +31,51 @@ const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
 };
 
 export default function DataSourcesList() {
-  const datas: Data[] = [];
+  const [datas, setDatas] = useState<Data[]>([]);
   const [input, setInput] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      const response = await fetch("http://localhost:3000/project/1/upload", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          // Don't set Content-Type when sending FormData
+          // Let the browser set it with the correct boundary
+        },
+        body: formData,
+      });
+
+      const responseText = await response.text();
+      console.log("Response:", responseText);
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.status} - ${responseText}`);
+      }
+
+      const data = JSON.parse(responseText);
+      setDatas((prev) => [...prev, data]);
+      toast.success("File uploaded successfully");
+    } catch (error: unknown) {
+      console.error("Upload error:", error);
+      const message =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      toast.error("Failed to upload file: " + message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -46,17 +91,38 @@ export default function DataSourcesList() {
           placeholder="Search..."
         />
       </div>
-      {/* Add data source */}
-      <Button className="border border-foreground/5 w-full" variant="secondary">
-        <Upload />
-        Add Data Source
-      </Button>
+      {/* Simplified upload button */}
+      <div className="w-full">
+        <input
+          id="file-upload"
+          type="file"
+          className="hidden"
+          accept=".pdf,.png,.jpg,.jpeg,.txt"
+          onChange={handleFileUpload}
+        />
+        <label htmlFor="file-upload">
+          <Button
+            className="w-full"
+            variant="secondary"
+            disabled={isUploading}
+            onClick={() => document.getElementById("file-upload")?.click()}
+          >
+            <Upload className={isUploading ? "animate-spin" : ""} />
+            {isUploading ? "Uploading..." : "Add Data Source"}
+          </Button>
+        </label>
+      </div>
       {/* Data source list */}
       <div className="overflow-y-auto">
         {datas.map((data, index) => {
           const dataIcon = mapFileTypeToIcon(data.fileType);
           return (
-            <Button key={index} variant="ghost" className="w-full h-auto">
+            <Button
+              key={index}
+              variant="ghost"
+              className="w-full h-auto"
+              //   onClick={() => data.url}
+            >
               <dataIcon.icon className="min-w-6 min-h-6" />
               <div className="min-w-0 flex-1 text-left">
                 <p className="truncate font-medium">{data.name}</p>

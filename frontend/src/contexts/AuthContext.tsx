@@ -5,7 +5,7 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { getCookie, setCookie, useCookiesNext } from "cookies-next";
+import { useCookiesNext } from "cookies-next";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface User {
@@ -22,27 +22,60 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: undefined,
+  setUser: () => {},
+  isLoading: false,
+  isAuthenticated: false,
+});
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { getCookie } = useCookiesNext();
   const [user, setUser] = useState<Partial<User>>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = getCookie("refreshToken")?.toString();
     if (token != null) {
-      const user = jwt.verify(
-        token,
-        process.env.REFRESH_JWT_SECRET as string
-      ) as JwtPayload;
-      setUser(user as Partial<User>);
+      // Instead of verifying the token (which requires the secret),
+      // just decode it to read the payload
+      try {
+        // This only decodes the JWT payload without verification
+        // const decoded = jwt.decode(token) as JwtPayload;
+        jwt.decode(token) as JwtPayload;
+
+        // Alternatively, fetch user profile from backend
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/profile`, {
+          credentials: "include",
+        })
+          .then((res) => {
+            if (res.ok) return res.json();
+            throw new Error("Failed to fetch user profile");
+          })
+          .then((userData) => {
+            setUser(userData);
+          })
+          .catch((err) => {
+            console.error("Auth error:", err);
+            setUser(undefined);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        setUser(undefined);
+        setIsLoading(false);
+      }
+    } else {
+      setIsLoading(false);
     }
-  }, []);
+  }, [getCookie]);
 
   const value = {
     user,
     setUser,
-    isLoading: !!user,
+    isLoading,
     isAuthenticated: !!user,
   };
 

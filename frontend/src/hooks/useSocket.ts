@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import socket from "../socket";
 
-export type SocketConnectionEvents = [string, (...args: any[]) => void];
+export type EventHandler = (...args: unknown[]) => void;
+export type SocketConnectionEvents = [string, EventHandler];
 
 export default function useSocket(connectionEvents: SocketConnectionEvents[]) {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -19,7 +20,7 @@ export default function useSocket(connectionEvents: SocketConnectionEvents[]) {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [connectionEvents]);
 
   return { socket, isConnected };
 }

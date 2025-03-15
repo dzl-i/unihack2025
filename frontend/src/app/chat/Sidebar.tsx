@@ -9,41 +9,55 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarSeparator,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Loader, User } from "lucide-react";
-import { WorkspaceDropdown } from "./WorkspaceDropdown";
+import { Loader, User, Users } from "lucide-react";
+import { Workspace, WorkspaceDropdown } from "./WorkspaceDropdown";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
-import DataSourcesList from "./DataSourcesList";
+import Logo from "@/components/logo";
+import useQuery from "@/hooks/useRequest";
 
-const data = {
-  workspaces: [
-    {
-      name: "Personal",
-      icon: User,
-    },
-  ],
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    profilePic: "",
-  },
-};
+export function Sidebar() {
+  const { data: user } = useQuery("/user/profile");
+  const { data: workspaces } = useQuery("/project/list");
+  const [activeWorkspace, setActiveWorkspace] = React.useState<
+    Workspace | undefined
+  >(undefined);
 
-export function Sidebar({
-  ...props
-}: React.ComponentProps<typeof ShadcnSidebar>) {
+  const normalizedWorkspace = React.useMemo(
+    () =>
+      workspaces != null
+        ? workspaces.map(
+            (workspace: Partial<{ name: string; isShared: boolean }>) => ({
+              name: workspace.name,
+              icon: workspace.isShared ? Users : User,
+            })
+          )
+        : [],
+    [workspaces]
+  );
+
+  React.useEffect(() => {
+    if (normalizedWorkspace != null && activeWorkspace == null) {
+      setActiveWorkspace(normalizedWorkspace[0]);
+    }
+  }, [activeWorkspace, normalizedWorkspace]);
+
   return (
-    <ShadcnSidebar {...props}>
+    <ShadcnSidebar>
       <SidebarHeader className="p-4">
-        <div className="flex justify-between items-center mb-2">
-          <p className="font-bold group-data-[collapsible=icon]:hidden">
-            AppName
+        <div className="flex gap-2 mb-2 cursor-default">
+          <Logo />
+          <p className="font-bold group-data-[collapsible=icon]:hidden text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">
+            CollabAI
           </p>
         </div>
         <div className="group-data-[collapsible=icon]:hidden">
-          <WorkspaceDropdown workspaces={data.workspaces} />
+          <WorkspaceDropdown
+            activeWorkspace={activeWorkspace}
+            setActiveWorkspace={setActiveWorkspace}
+            workspaces={normalizedWorkspace}
+          />
         </div>
       </SidebarHeader>
       <SidebarSeparator className="mx-0 my-2" />
@@ -56,13 +70,13 @@ export function Sidebar({
               </div>
             }
           >
-            <DataSourcesList />
+            {/* <DataSourcesList /> */}
           </Suspense>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="space-y-2 group-data-[collapsible=icon]:hidden p-4">
         <AddCollaboratorsDialog />
-        <ProfileDropdown user={data.user} />
+        <ProfileDropdown user={user} />
       </SidebarFooter>
     </ShadcnSidebar>
   );
