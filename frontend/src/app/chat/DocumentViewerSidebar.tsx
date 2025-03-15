@@ -12,24 +12,11 @@ export type DocumentFile = {
 
 export default function DocumentViewerSidebar({
   file,
-  showDetails,
   setShowDetails,
 }: {
   file: DocumentFile;
-  showDetails: boolean;
   setShowDetails: (show: boolean) => void;
 }) {
-  const checkFileIsImage = (file: DocumentFile) => {
-    if (file == null) {
-      return false;
-    }
-
-    const fileExtension = file.name.split(".").pop()?.toLowerCase();
-    const imageExtensions = ["jpg", "jpeg", "png"];
-
-    return imageExtensions.includes(fileExtension || "");
-  };
-
   return (
     <div className="min-w-[320px] border-l border-foreground/15 flex flex-col h-screen transition-transform duration-300 ease-in-out">
       <div className="p-3">
