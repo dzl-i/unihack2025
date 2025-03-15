@@ -40,7 +40,7 @@ export default function DataSourcesList() {
         <Input
           id="search-data-sources"
           name="search-data-sources"
-          className="ring-0 focus-visible:ring-0 border-none"
+          className="ring-0 focus-visible:ring-0 border-none bg-transparent dark:bg-transparent"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Search..."
