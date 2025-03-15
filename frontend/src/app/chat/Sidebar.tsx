@@ -35,24 +35,19 @@ export function Sidebar({
   ...props
 }: React.ComponentProps<typeof ShadcnSidebar>) {
   return (
-    <ShadcnSidebar
-      collapsible="icon"
-      className={`${props.className} p-3`}
-      {...props}
-    >
-      <SidebarHeader>
+    <ShadcnSidebar {...props}>
+      <SidebarHeader className="p-4">
         <div className="flex justify-between items-center mb-2">
           <p className="font-bold group-data-[collapsible=icon]:hidden">
             AppName
           </p>
-          <SidebarTrigger />
         </div>
         <div className="group-data-[collapsible=icon]:hidden">
           <WorkspaceDropdown workspaces={data.workspaces} />
         </div>
       </SidebarHeader>
       <SidebarSeparator className="mx-0 my-2" />
-      <SidebarContent>
+      <SidebarContent className="p-2">
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <Suspense
             fallback={
@@ -65,7 +60,7 @@ export function Sidebar({
           </Suspense>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="space-y-2 group-data-[collapsible=icon]:hidden">
+      <SidebarFooter className="space-y-2 group-data-[collapsible=icon]:hidden p-4">
         <AddCollaboratorsDialog />
         <ProfileDropdown user={data.user} />
       </SidebarFooter>
