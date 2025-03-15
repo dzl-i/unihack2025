@@ -11,6 +11,7 @@ export async function projectUploadDataSource(userId: string, projectId: string,
   const userIds = project.users.map((user) => user.userId);
   if (!userIds.includes(userId)) throw { status: 403, message: "You do not have access to this project." };
 
+  // we can just store the key (path) to the file, S3client automatically handles the url stuff
   const key = "input/" + fileName;
 
   const putCommand = new PutObjectCommand({
