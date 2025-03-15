@@ -6,7 +6,9 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { TrendingUp } from "lucide-react";
+import { Loader, TrendingUp } from "lucide-react";
+import { getFileViewerLink } from "@/lib/utils";
+import IFrame from "./Iframe";
 
 export default function Page() {
   const url =
@@ -27,7 +29,15 @@ export default function Page() {
           </Button>
         </header>
         {/* Main content/chatbot */}
-        <iframe src={`https://docs.google.com/gview?url=${url}`}></iframe>
+        <IFrame
+          className="h-full"
+          fallback={
+            <div className="flex justify-center items-center w-full h-full">
+              <Loader className="animate-spin w-6 h-6" />
+            </div>
+          }
+          src={getFileViewerLink(url)}
+        />
       </SidebarInset>
     </SidebarProvider>
   );

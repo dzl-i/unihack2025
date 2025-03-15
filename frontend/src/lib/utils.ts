@@ -13,3 +13,8 @@ export function convertNameToAbbreviation(name: string) {
     ? firstName[0].toUpperCase() + lastName[0].toUpperCase()
     : firstName[0].toUpperCase();
 }
+
+export function getFileViewerLink(url: string) {
+  const presignedUrl = encodeURIComponent(url);
+  return "https://docs.google.com/gview?url=" + presignedUrl + "&embedded=true";
+}
