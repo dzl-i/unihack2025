@@ -30,7 +30,7 @@ import { projectDeleteDataSource } from './project/deleteData';
 
 
 interface MulterRequest extends Request {
-  file?: multer.File;
+  file?: Express.Multer.File;
 }
 
 
