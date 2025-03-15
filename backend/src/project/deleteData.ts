@@ -1,4 +1,6 @@
+import { DeleteObjectCommand, waitUntilObjectNotExists } from "@aws-sdk/client-s3";
 import { deleteDataSource, getDataSourceById } from "../helper/dataHelper";
+import s3Client from "../helper/s3Client";
 
 export async function projectDeleteDataSource(userId: string, dataSourceId: string) {
   const dataSource = await getDataSourceById(dataSourceId);
@@ -10,7 +12,23 @@ export async function projectDeleteDataSource(userId: string, dataSourceId: stri
   const data = await deleteDataSource(dataSourceId);
   if (data === null) throw { status: 400, message: "Failed to delete data source." };
 
-  // TODO: Delete the file from S3 using dataSource.url
+  try {
+    await s3Client.send(new DeleteObjectCommand({
+      Bucket: process.env.AWS_BUCKET!,
+      Key: dataSource.url,
+    }));
+
+    await waitUntilObjectNotExists(
+      { client: s3Client, maxWaitTime: 10 },
+      { Bucket: process.env.AWS_BUCKET!, Key: dataSource.url }
+    );
+  } catch (err) {
+    console.error(err)
+    throw {
+      status: 500,
+      message: "An error occured while deleting from S3: " + err,
+    };
+  }
 
   // TODO: Delete the data from AstraDB
 
