@@ -27,7 +27,7 @@ export default function Page() {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1 size-8" />
             <Separator orientation="vertical" />
-            <h1>Yippee</h1>
+            <h1>Chat with CollabAI</h1>
           </div>
           <Button variant="outline">
             <TrendingUp />
