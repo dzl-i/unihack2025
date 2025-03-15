@@ -16,15 +16,21 @@ import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
 import Logo from "@/components/logo";
 import useQuery from "@/hooks/useRequest";
 import DataSourcesList from "./DataSourcesList";
+import { DocumentFile } from "./DocumentViewerSidebar";
 
-export function Sidebar() {
+export function Sidebar({
+  setSelectedFile,
+}: {
+  setSelectedFile: (file?: DocumentFile) => void;
+}) {
   const { data: user } = useQuery("/user/profile");
-  const { data: workspaces, refetch: refetchWorkspaces } = useQuery("/project/list");
+  const { data: workspaces, refetch: refetchWorkspaces } =
+    useQuery("/project/list");
   const [activeWorkspace, setActiveWorkspace] = React.useState<
     Workspace | undefined
   >(undefined);
 
-  const normalizedWorkspace = React.useMemo(
+  const normalizedWorkspaces = React.useMemo(
     () =>
       workspaces != null
         ? workspaces.map(
@@ -38,10 +44,10 @@ export function Sidebar() {
   );
 
   React.useEffect(() => {
-    if (normalizedWorkspace != null && activeWorkspace == null) {
-      setActiveWorkspace(normalizedWorkspace[0]);
+    if (normalizedWorkspaces != null && activeWorkspace == null) {
+      setActiveWorkspace(normalizedWorkspaces[0]);
     }
-  }, [activeWorkspace, normalizedWorkspace]);
+  }, [activeWorkspace, normalizedWorkspaces]);
 
   return (
     <ShadcnSidebar>
@@ -56,7 +62,7 @@ export function Sidebar() {
           <WorkspaceDropdown
             activeWorkspace={activeWorkspace}
             setActiveWorkspace={setActiveWorkspace}
-            workspaces={normalizedWorkspace}
+            workspaces={normalizedWorkspaces}
             refetchWorkspaces={refetchWorkspaces}
           />
         </div>
@@ -73,7 +79,7 @@ export function Sidebar() {
               </div>
             }
           >
-            <DataSourcesList />
+            <DataSourcesList onFileSelected={setSelectedFile} />
           </Suspense>
         </SidebarGroup>
       </SidebarContent>
