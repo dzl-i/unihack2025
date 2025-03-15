@@ -71,7 +71,10 @@ export function ProfileDropdown({ user }: { user: User }) {
                 className="border border-foreground/15"
               >
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.profilePic} alt={user.name} />
+                  <AvatarImage
+                    src={`data:image/png;base64,${user.profilePic}`}
+                    alt={user.name}
+                  />
                   <AvatarFallback className="bg-black/25 rounded-lg">
                     {convertNameToAbbreviation(user.name)}
                   </AvatarFallback>
@@ -94,7 +97,10 @@ export function ProfileDropdown({ user }: { user: User }) {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.profilePic} alt={user.name} />
+                    <AvatarImage
+                      src={`data:image/png;base64,${user.profilePic}`}
+                      alt={user.name}
+                    />
                     <AvatarFallback className="bg-black/25 rounded-lg">
                       {convertNameToAbbreviation(user.name)}
                     </AvatarFallback>
@@ -116,18 +122,20 @@ export function ProfileDropdown({ user }: { user: User }) {
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Confirm Logout</DialogTitle>
-                <DialogDescription>Are you sure you want to log out?</DialogDescription>
+                <DialogDescription>
+                  Are you sure you want to log out?
+                </DialogDescription>
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="ghost">Cancel</Button>
                 </DialogClose>
-                <Button 
-                  variant="destructive" 
+                <Button
+                  variant="destructive"
                   onClick={handleLogout}
                   disabled={isLoggingOut}
                 >
-                  {isLoggingOut ? 'Logging out...' : 'Log out'}
+                  {isLoggingOut ? "Logging out..." : "Log out"}
                 </Button>
               </DialogFooter>
             </DialogContent>

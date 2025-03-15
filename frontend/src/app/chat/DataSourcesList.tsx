@@ -30,46 +30,48 @@ const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
   }
 };
 
-export default function DataSourcesList({ onFileSelect }: { onFileSelect: (url: string) => void }) {
+export default function DataSourcesList() {
   const [datas, setDatas] = useState<Data[]>([]);
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (!files) return;
-    
+
     setIsUploading(true);
-    
+
     try {
       const formData = new FormData();
-      formData.append('file', files[0]);
-      
-      const response = await fetch('http://localhost:3000/project/1/upload', {
-        method: 'POST',
-        credentials: 'include',
+      formData.append("file", files[0]);
+
+      const response = await fetch("http://localhost:3000/project/1/upload", {
+        method: "POST",
+        credentials: "include",
         headers: {
           // Don't set Content-Type when sending FormData
           // Let the browser set it with the correct boundary
         },
-        body: formData
+        body: formData,
       });
 
       const responseText = await response.text();
       console.log("Response:", responseText);
-      
+
       if (!response.ok) {
         throw new Error(`Upload failed: ${response.status} - ${responseText}`);
       }
 
       const data = JSON.parse(responseText);
-      setDatas(prev => [...prev, data]);
-      toast.success('File uploaded successfully');
-      
+      setDatas((prev) => [...prev, data]);
+      toast.success("File uploaded successfully");
     } catch (error: unknown) {
-      console.error('Upload error:', error);
-      const message = error instanceof Error ? error.message : 'Unknown error occurred';
-      toast.error('Failed to upload file: ' + message);
+      console.error("Upload error:", error);
+      const message =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      toast.error("Failed to upload file: " + message);
     } finally {
       setIsUploading(false);
     }
@@ -99,14 +101,14 @@ export default function DataSourcesList({ onFileSelect }: { onFileSelect: (url: 
           onChange={handleFileUpload}
         />
         <label htmlFor="file-upload">
-          <Button 
-            className="w-full" 
+          <Button
+            className="w-full"
             variant="secondary"
             disabled={isUploading}
-            onClick={() => document.getElementById('file-upload')?.click()}
+            onClick={() => document.getElementById("file-upload")?.click()}
           >
-            <Upload className={isUploading ? 'animate-spin' : ''} />
-            {isUploading ? 'Uploading...' : 'Add Data Source'}
+            <Upload className={isUploading ? "animate-spin" : ""} />
+            {isUploading ? "Uploading..." : "Add Data Source"}
           </Button>
         </label>
       </div>
@@ -115,11 +117,11 @@ export default function DataSourcesList({ onFileSelect }: { onFileSelect: (url: 
         {datas.map((data, index) => {
           const dataIcon = mapFileTypeToIcon(data.fileType);
           return (
-            <Button 
-              key={index} 
-              variant="ghost" 
+            <Button
+              key={index}
+              variant="ghost"
               className="w-full h-auto"
-              onClick={() => data.url && onFileSelect(data.url)}
+              //   onClick={() => data.url}
             >
               <dataIcon.icon className="min-w-6 min-h-6" />
               <div className="min-w-0 flex-1 text-left">

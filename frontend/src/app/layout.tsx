@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Toaster } from "sonner";
 
 // Load Poppins with various weights
 const poppins = Poppins({
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${poppins.className}`}>
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
