@@ -1,10 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Poppins } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] })
+// Load Poppins with various weights
+const poppins = Poppins({ 
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ["latin"],
+  variable: '--font-poppins',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: "Jappy - Your Notes, Now Answering Back",
@@ -18,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>
+      <body className={`${poppins.className}`}>
           <Providers>
             {children}
           </Providers>
