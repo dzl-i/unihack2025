@@ -30,7 +30,6 @@ export async function projectCreate(userId: string, projectName: string) {
     dataSources: project.dataSources.map((dataSource) => ({
       dataSourceId: dataSource.id,
       name: dataSource.name,
-      url: dataSource.url,
     })),
   };
 }
@@ -38,7 +37,7 @@ export async function projectCreate(userId: string, projectName: string) {
 function generateRandomCode(length: number): string {
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   return Array.from(
-    { length }, 
+    { length },
     () => chars.charAt(Math.floor(Math.random() * chars.length))
   ).join('');
 }
