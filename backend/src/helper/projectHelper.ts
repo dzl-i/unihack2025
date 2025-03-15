@@ -33,7 +33,6 @@ export async function createProject(userId: string, name: string, code: string) 
         select: {
           id: true,
           name: true,
-          url: true,
         },
       },
     },
@@ -98,7 +97,6 @@ export async function detailProject(projectId: string) {
         select: {
           id: true,
           name: true,
-          url: true,
         },
       },
     },
@@ -178,7 +176,6 @@ export async function joinProject(userId: string, code: string) {
         select: {
           id: true,
           name: true,
-          url: true,
         },
       },
     },

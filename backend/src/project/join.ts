@@ -29,7 +29,6 @@ export async function projectJoin(userId: string, code: string) {
     dataSources: project.dataSources.map((dataSource) => ({
       dataSourceId: dataSource.id,
       name: dataSource.name,
-      url: dataSource.url,
     })),
   };
 }
