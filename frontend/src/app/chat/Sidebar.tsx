@@ -36,8 +36,8 @@ export function Sidebar({ onFileSelect }: { onFileSelect: (url: string) => void 
     <ShadcnSidebar>
       <SidebarHeader className="p-4">
         <div className="flex justify-between items-center mb-2">
-          <p className="font-bold group-data-[collapsible=icon]:hidden">
-            AppName
+          <p className="font-bold group-data-[collapsible=icon]:hidden text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">
+            CollabAI
           </p>
         </div>
         <div className="group-data-[collapsible=icon]:hidden">

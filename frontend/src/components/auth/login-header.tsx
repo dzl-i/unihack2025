@@ -12,7 +12,7 @@ export function LoginHeader() {
         <ArrowLeft size={20} />
         <Logo width={24} height={24} />
       </div>
-      <span className="text-xl font-semibold">CollabAI</span>
+      <span className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/75">CollabAI</span>
     </Link>
   );
 }

@@ -31,14 +31,14 @@ export default function LandingPage() {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            className="border-foreground/15"
+            className="border-foreground/15 cursor-pointer bg-purple-gradient-bottom"
             variant="default"
             onClick={() => router.push("/login")}
           >
             Login
           </Button>
           <Button
-            className="border-foreground/15"
+            className="border-foreground/15 cursor-pointer"
             variant="ghost"
             onClick={() => router.push("/signup")}
           >
@@ -56,7 +56,7 @@ export default function LandingPage() {
           }`}
         >
           <div className="space-y-6 max-w-[640px] px-4 mx-auto">
-            <div className="bg-purple-gradient shadow-purple-gradient inline-block p-3 rounded-lg">
+            <div className="bg-purple-gradient-bottom shadow-purple-gradient inline-block p-3 rounded-lg">
               <Logo width={48} height={48} />
             </div>
             <h1 className="text-5xl font-bold">
@@ -95,9 +95,9 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-10 gap-4 max-w-5xl mx-auto p-8">
             <div className="relative col-span-1 md:col-span-6 space-y-2 bg-gradient-to-br from-foreground/5 to-foreground/0 border border-foreground/15 p-6 text-left rounded-xl transition-colors duration-500 after:absolute after:inset-0 after:-z-10 after:animate-pulse after:rounded-full after:bg-purple-4 after:bg-opacity-0 after:blur-lg after:transition-all after:hover:bg-opacity-5">
               <div className="flex gap-2">
-                <Upload className="mx-auto block size-12 bg-purple-gradient p-3 rounded-xl shadow-purple-gradient" />
+                <Upload className="mx-auto block size-12 bg-purple-gradient-bottom p-3 rounded-xl shadow-purple-gradient" />
                 <h3 className="text-lg font-bold flex-grow">
-                  Bring All Your Stuff - We’ll Handle It
+                  Bring All Your Stuff - We'll Handle It
                 </h3>
               </div>
               <p className="text-sm opacity-50">
@@ -109,7 +109,7 @@ export default function LandingPage() {
             </div>
             <div className="relative col-span-1 md:col-span-4 space-y-2 max-w-4xl bg-gradient-to-br from-foreground/5 to-foreground/0 border border-foreground/15 p-6 text-left rounded-xl transition-colors duration-500 after:absolute after:inset-0 after:-z-10 after:animate-pulse after:rounded-full after:bg-purple-4 after:bg-opacity-0 after:blur-lg after:transition-all after:hover:bg-opacity-5">
               <div className="flex gap-2">
-                <MessageSquareTextIcon className="mx-auto block size-12 bg-purple-gradient p-3 rounded-xl shadow-purple-gradient" />
+                <MessageSquareTextIcon className="mx-auto block size-12 bg-purple-gradient-bottom p-3 rounded-xl shadow-purple-gradient" />
                 <h3 className="text-lg font-bold flex-grow">
                   Your Documents Have the Answers
                 </h3>
@@ -123,7 +123,7 @@ export default function LandingPage() {
             </div>
             <div className="relative col-span-1 md:col-span-4 space-y-2 bg-gradient-to-br from-foreground/5 to-foreground/0 border border-foreground/15 p-6 text-left rounded-xl transition-colors duration-500 after:absolute after:inset-0 after:-z-10 after:animate-pulse after:rounded-full after:bg-purple-4 after:bg-opacity-0 after:blur-lg after:transition-all after:hover:bg-opacity-5">
               <div className="flex gap-2">
-                <Users className="mx-auto block size-12 bg-purple-gradient p-3 rounded-xl shadow-purple-gradient" />
+                <Users className="mx-auto block size-12 bg-purple-gradient-bottom p-3 rounded-xl shadow-purple-gradient" />
                 <h3 className="text-lg font-bold flex-grow">
                   Share What You Know
                 </h3>
@@ -137,7 +137,7 @@ export default function LandingPage() {
             </div>
             <div className="relative col-span-1 md:col-span-6 space-y-2 bg-gradient-to-br from-foreground/5 to-foreground/0 border border-foreground/15 p-6 text-left rounded-xl transition-colors duration-500 after:absolute after:inset-0 after:-z-10 after:animate-pulse after:rounded-full after:bg-purple-4 after:bg-opacity-0 after:blur-lg after:transition-all after:hover:bg-opacity-5">
               <div className="flex gap-2">
-                <BarChart className="mx-auto block size-12 bg-purple-gradient p-3 rounded-xl shadow-purple-gradient" />
+                <BarChart className="mx-auto block size-12 bg-purple-gradient-bottom p-3 rounded-xl shadow-purple-gradient" />
                 <h3 className="text-lg font-bold flex-grow">
                   See How Everything Connects
                 </h3>
@@ -158,7 +158,7 @@ export default function LandingPage() {
           }`}
         >
           <div className="space-y-6 m-auto max-w-xl">
-            <div className="bg-purple-gradient shadow-purple-gradient inline-block p-3 rounded-lg">
+            <div className="bg-purple-gradient-bottom shadow-purple-gradient inline-block p-3 rounded-lg">
               <Logo width={48} height={48} />
             </div>
             <h1 className="text-4xl font-semibold">Get Started Now!</h1>
@@ -167,7 +167,13 @@ export default function LandingPage() {
               documents, ask your first question, and watch as your information
               transforms into an interactive knowledge hub.
             </p>
-            <Button variant="default">Get Started</Button>
+            <Button 
+              variant="default" 
+              className="cursor-pointer bg-purple-gradient-right"
+              onClick={() => router.push("/signup")}
+            >
+              Get Started
+            </Button>
           </div>
           <div className="glow absolute left-1/2 top-1/2 -z-10 aspect-square w-full max-w-sm -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-purple-800/35 blur-3xl filter transition-all"></div>
         </div>
