@@ -1,19 +1,20 @@
-import { api_endpoint, headers, token, unstructured_api_url } from './unstructured';
+import { api_endpoint, astra_collection, astra_dest_name, astra_keyspace, headers, token, unstructured_api_url } from './unstructured';
 
 interface CreateDestResponse {
   id: string;
 }
 
 // collection_name can only contain characters
+// func is not generally used when creating workflows because all data is in one collection (we are broke)
 export async function createDestConnector(collection_name: string, keyspace: string): Promise<string> {
   const body = JSON.stringify({
-    name: `astradb-dest-abc`,
+    name: astra_dest_name,
     type: "astradb",
     config: { 
       token,
       api_endpoint, 
-      collection_name:"test", 
-      keyspace 
+      collection_name: astra_collection, 
+      keyspace: astra_keyspace 
     }
   });
 
