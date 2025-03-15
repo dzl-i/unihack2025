@@ -16,8 +16,8 @@ interface User {
 }
 
 interface AuthContextType {
-  user: Partial<User> | undefined;
-  setUser: (u: Partial<User> | undefined) => void;
+  user: User | undefined;
+  setUser: (u: User | undefined) => void;
   isLoading: boolean;
   isAuthenticated: boolean;
 }
@@ -31,7 +31,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { getCookie } = useCookiesNext();
-  const [user, setUser] = useState<Partial<User>>();
+  const [user, setUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

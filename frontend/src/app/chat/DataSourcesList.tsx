@@ -15,12 +15,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { DocumentFile } from "./DocumentViewerSidebar";
+import { useParams } from "next/navigation";
+import { request } from "@/hooks/useRequest";
 
 export type Data = {
   name: string;
   description: string;
   fileType: string;
-  url?: string;
+  url: string;
 };
 
 const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
@@ -30,8 +33,13 @@ const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
   }
 };
 
-export default function DataSourcesList() {
-  const [datas] = useState<Data[]>([]);
+export default function DataSourcesList({
+  onFileSelected,
+}: {
+  onFileSelected: (file: DocumentFile) => void;
+}) {
+  const { project_id } = useParams();
+  const [datas, setDatas] = useState<Data[]>([]);
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -44,21 +52,24 @@ export default function DataSourcesList() {
     setIsUploading(true);
 
     try {
-      // TODO: Request to backend
-      //   const formData = new FormData();
-      //   formData.append("file", files[0]);
+      // Now using the dynamic project_id from URL parameters
+      const formData = new FormData();
+      formData.append("file", files[0]);
 
-      //   const { data, error } = await request("POST", "/project/:id/upload", {
-      //     body: formData,
-      //   });
+      const { data, error } = await request(
+        "POST",
+        `/project/${project_id}/upload`,
+        {
+          body: formData,
+        }
+      );
 
-      //   if (error) {
-      //     toast.error("Failed to upload files");
-      //   } else {
-      //     setDatas((prev) => [...prev, data]);
-      //     toast.success("File uploaded successfully");
-      //   }
-      toast.success("File uploaded successfully");
+      if (error) {
+        toast.error("Failed to upload files");
+      } else {
+        setDatas((prev) => [...prev, data]);
+        toast.success("File uploaded successfully");
+      }
     } catch (err) {
       toast.error("Something is wrong. Try again");
       console.error(err);
@@ -89,7 +100,7 @@ export default function DataSourcesList() {
           disabled={isUploading}
         >
           <label
-            className="flex gap-2 items-center justify-center p-2 w-full"
+            className="flex gap-2 items-center justify-center p-2 w-full cursor-pointer"
             htmlFor="file-upload"
           >
             {isUploading ? <Loader className="animate-spin" /> : <Upload />}
@@ -113,7 +124,7 @@ export default function DataSourcesList() {
               key={index}
               variant="ghost"
               className="w-full h-auto"
-              // TODO: Open document viewer
+              onClick={() => onFileSelected({ name: data.name, url: data.url })}
             >
               <dataIcon.icon className="min-w-6 min-h-6" />
               <div className="min-w-0 flex-1 text-left">

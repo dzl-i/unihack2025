@@ -30,19 +30,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { convertNameToAbbreviation } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
-import { request } from "@/hooks/useRequest";
+import useQuery, { request } from "@/hooks/useRequest";
 import { useState } from "react";
 
 export type User = {
+  userId: string;
   name: string;
   email: string;
   profilePic: string;
 };
 
-export function ProfileDropdown({ user }: { user: User }) {
+export function ProfileDropdown() {
   const router = useRouter();
   const { isMobile } = useSidebar();
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
