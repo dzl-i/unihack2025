@@ -32,6 +32,7 @@ export async function projectDetails(userId: string, projectId: string) {
     dataSources: project.dataSources.map((dataSource) => ({
       dataSourceId: dataSource.id,
       name: dataSource.name,
+      url: dataSource.url,
     })),
   };
 }
