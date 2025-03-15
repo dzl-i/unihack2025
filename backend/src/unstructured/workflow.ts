@@ -1,5 +1,13 @@
 import { headers, unstructured_api_url } from "./unstructuredClient"
 
+interface WorkflowInfo {
+    id: string;
+  }
+  
+  interface CreateWorkflowResponse {
+    workflow_information: WorkflowInfo;
+  }
+
 const partition_node = {
     name: "Partitioner",
     type: "partition",
@@ -72,9 +80,10 @@ const workflow_nodes = [
     embed_node
 ]
 
-export function createWorkflow(source_id:string, destination_id:string) {
+// createWorkflow("6c5e3201-800b-4ca5-939e-a3dd76acb444", "da7acb17-7ec9-44f3-957f-7c138e7b82c7");
+export async function createWorkflow(source_id:string, destination_id:string) {
     const body = JSON.stringify({
-        name:`s3-to-astra-workflow-${Date.now()}`,
+        name:`workflow-${Date.now()}`,
         source_id,
         destination_id,
         workflow_type:"custom",
@@ -82,22 +91,21 @@ export function createWorkflow(source_id:string, destination_id:string) {
         schedule:"monthly"
     });
 
-    fetch(`${unstructured_api_url}/workflows`, {
-        method: 'POST',
-        headers,
-        body
-      })
-      .then(response => {
-        if (!response.ok) {
-            return response.text().then(text => { 
-            throw new Error(`Request failed with status ${response.status}: ${text}`);
-            });
-        }
-        return response.json(); 
-      })
-      .then(data => console.log('Success:', data))
-      .catch(error => console.error('Error:', error));
+    try {
+        const response = await fetch(`${unstructured_api_url}/workflows`, {
+            method: 'POST',
+            headers,
+            body
+          })
+
+        if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
+        const data = await response.json() as CreateWorkflowResponse;
+        return data.workflow_information.id;
+
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
 
 }
 
-createWorkflow("6c5e3201-800b-4ca5-939e-a3dd76acb444", "da7acb17-7ec9-44f3-957f-7c138e7b82c7");
