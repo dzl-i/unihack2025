@@ -329,7 +329,7 @@ io.use(async (socket, next) => {
 
     const user = await getUserById(decoded.userId);
     if (!user) throw next(new Error('User not found'));
-    
+
     socket.data.user = user;
 
     next();
@@ -376,7 +376,7 @@ io.on('connection', (socket) => {
   // Send a message/prompt
   socket.on('message', async (projectId, content) => {
     console.log(`User sent message to project: ${projectId}`);
-    const message = await projectSendMessage(socket.data.userId, projectId, content);
+    const message = await projectSendMessage(socket.data.userId, projectId, content) || "Could not retrieve message";
     io.to(projectId).emit('message', message); // TODO: Add the response from Langflow API
   });
 
