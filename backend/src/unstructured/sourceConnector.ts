@@ -26,19 +26,14 @@ export async function createSourceConnector(inputPath:string): Promise<string> {
     },
   });
 
-  try {
-    const response = await fetch(`${unstructured_api_url}/sources`, {
-      method: 'POST',
-      headers,
-      body
-    })
+  const response = await fetch(`${unstructured_api_url}/sources`, {
+    method: 'POST',
+    headers,
+    body
+  })
 
-    if (!response.ok) throw { status: 500, message: "Couldn't create source connector"}
-    const data = await response.json() as CreateSourceResponse;
-    return data.source_connector_information.id;
+  if (!response.ok) throw { status: 500, message: "Couldn't create source connector"}
+  const data = await response.json() as CreateSourceResponse;
+  return data.source_connector_information.id;
 
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
 }

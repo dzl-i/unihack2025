@@ -19,19 +19,14 @@ export async function createDestConnector(collection_name: string, keyspace: str
     config: { token, api_endpoint, collection_name, keyspace }
   });
 
-  try {
-    const response = await fetch(`${unstructured_api_url}/destinations`, {
-      method: 'POST',
-      headers,
-      body
-    });
+  const response = await fetch(`${unstructured_api_url}/destinations`, {
+    method: 'POST',
+    headers,
+    body
+  });
 
-    if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
-    const data = await response.json() as CreateDestResponse;
-    return data.destination_connector_information.id;
+  if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
+  const data = await response.json() as CreateDestResponse;
+  return data.destination_connector_information.id;
 
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
 }

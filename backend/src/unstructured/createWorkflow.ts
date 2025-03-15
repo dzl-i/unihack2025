@@ -91,21 +91,16 @@ export async function createWorkflow(source_id:string, destination_id:string) {
         schedule:"monthly"
     });
 
-    try {
-        const response = await fetch(`${unstructured_api_url}/workflows`, {
-            method: 'POST',
-            headers,
-            body
-          })
 
-        if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
-        const data = await response.json() as CreateWorkflowResponse;
-        return data.workflow_information.id;
+    const response = await fetch(`${unstructured_api_url}/workflows`, {
+        method: 'POST',
+        headers,
+        body
+        })
 
-    } catch (error) {
-        console.error('Error:', error);
-        throw error;
-    }
+    if (!response.ok) throw { status: 500, message: "Couldn't create dest connector"}
+    const data = await response.json() as CreateWorkflowResponse;
+    return data.workflow_information.id;
 
 }
 
