@@ -52,13 +52,10 @@ export default function DataSourcesList({
     setIsUploading(true);
 
     try {
-      // Now using the dynamic project_id from URL parameters
       const formData = new FormData();
       formData.append("file", files[0]);
-
-      const { data, error } = await request("POST", `/project/${project_id}/upload`, {
-        body: formData,
-      });
+      
+      const { data, error } = await request("POST", `/project/${project_id}/upload`, formData);
 
       if (error) {
         toast.error("Failed to upload files");
@@ -112,31 +109,30 @@ export default function DataSourcesList({
         />
       </div>
       {/* Data source list */}
-      <div className="overflow-y-auto">
+      <div className="overflow-y-auto flex flex-col gap-2">
         {datas.map((data, index) => {
           const dataIcon = mapFileTypeToIcon(data.fileType);
           return (
-            <Button
+            <div
               key={index}
-              variant="ghost"
-              className="w-full h-auto"
+              className="w-full h-auto flex items-center gap-3 p-4 rounded-lg cursor-pointer hover:bg-secondary"
               onClick={() => onFileSelected({ name: data.name, url: data.url })}
             >
               <dataIcon.icon className="min-w-6 min-h-6" />
               <div className="min-w-0 flex-1 text-left">
-                <p className="truncate font-medium">{data.name}</p>
-                <p className="truncate text-sm opacity-50">
+                <p className="truncate text-sm">{data.name}</p>
+                <p className="truncate text-xs opacity-50">
                   {data.description}
                 </p>
               </div>
               <Dialog>
                 <DialogTrigger>
-                  <Trash2 className="min-w-6 min-h-6 text-destructive" />
+                  <Trash2 className="min-w-6 min-h-6 text-destructive cursor-pointer" />
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>Yippee</DialogTitle>
-                    <DialogDescription>ts pmo icl</DialogDescription>
+                  <DialogTitle>Delete Confirmation</DialogTitle>
+                  <DialogDescription>Are you sure you want to delete this file?</DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
                     <DialogClose asChild>
@@ -146,7 +142,7 @@ export default function DataSourcesList({
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-            </Button>
+            </div>
           );
         })}
       </div>
