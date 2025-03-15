@@ -5,6 +5,7 @@ import { generateToken } from '../helper/tokenHelper';
 import { getHash } from '../helper/util';
 
 import { PrismaClient } from "@prisma/client";
+import { projectCreate } from '../project/create';
 const prisma = new PrismaClient();
 
 export async function authRegister(name: string, email: string, password: string, username: string, profilePic: string) {
@@ -22,6 +23,10 @@ export async function authRegister(name: string, email: string, password: string
       profilePic: profilePic,
     }
   });
+
+  // Create a personal project
+  const project = await projectCreate(user.id, "Personal");
+  if (project === null) throw { status: 400, message: "Failed to create personal project." };
 
   // Generate the token
   const token = await generateToken(user.id);
