@@ -35,13 +35,12 @@ export async function projectUploadDataSource(userId: string, projectId: string,
 
   // TODO: Upload the processed data to AstraDB
 
-  const data = await uploadDataSource(projectId, fileName, key);
+  const data = await uploadDataSource(projectId, fileName);
   if (data === null) throw { status: 400, message: "Failed to upload data source." };
 
   return {
     id: data.id,
     name: data.name,
-    url: data.url,
     projectName: project.name,
   }
 }

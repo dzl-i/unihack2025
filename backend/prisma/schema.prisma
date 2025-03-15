@@ -64,7 +64,6 @@ model Message {
 model DataSource {
     id        String  @id @default(uuid())
     name      String
-    url       String
     projectId String
     project   Project @relation(fields: [projectId], references: [id])
 }
