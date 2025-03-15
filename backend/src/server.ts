@@ -232,7 +232,7 @@ app.post('/project/join', authenticateToken, async (req: Request, res: Response)
   try {
     const userId = res.locals.userId;
     const { code } = req.body;
-    
+
     const project = await projectJoin(userId, code);
 
     res.status(200).json(project);
@@ -268,7 +268,7 @@ app.post('/project/:id/upload', authenticateToken, upload.single('file'), async 
     const fileName = req.file?.originalname;
     const fileType = req.file?.mimetype; // not sure if S3 needs this
 
-    const file = await projectUploadDataSource(userId, projectId, fileBuffer, fileName);
+    const file = await projectUploadDataSource(userId, projectId, fileBuffer, fileName, fileType);
 
     res.status(200).json(file);
   } catch (error: any) {
@@ -326,7 +326,7 @@ async function authenticateToken(req: Request, res: Response, next: NextFunction
 
       if (!user) { res.status(403).json({ error: "User not found." }); return; }
 
-      if (user && user.remainingLoginAttempts <= 0) { res.status(403).json({ error: "User is blocked." }); return;}
+      if (user && user.remainingLoginAttempts <= 0) { res.status(403).json({ error: "User is blocked." }); return; }
 
       res.locals.userId = atDecoded.userId;
       return next();
