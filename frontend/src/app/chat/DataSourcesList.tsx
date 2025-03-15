@@ -32,6 +32,14 @@ export default function DataSourcesList() {
   const datas: Data[] = [];
   const [input, setInput] = useState("");
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+    
+    // Handle your file upload logic here
+    console.log("Files selected:", files);
+  };
+
   return (
     <div className="space-y-4">
       {/* Search bar */}
@@ -46,11 +54,21 @@ export default function DataSourcesList() {
           placeholder="Search..."
         />
       </div>
-      {/* Add data source */}
-      <Button className="border border-foreground/5 w-full" variant="secondary">
-        <Upload />
-        Add Data Source
-      </Button>
+      {/* Modified Add data source button */}
+      <label htmlFor="file-upload" className="w-full">
+        <Button className="border border-foreground/5 w-full" variant="secondary">
+          <Upload />
+          Add Data Source
+        </Button>
+        <input
+          id="file-upload"
+          type="file"
+          className="hidden"
+          accept=".pdf,.png,.jpg,.jpeg,.txt"
+          onChange={handleFileUpload}
+          multiple
+        />
+      </label>
       {/* Data source list */}
       <div className="overflow-y-auto">
         {datas.map((data, index) => {
