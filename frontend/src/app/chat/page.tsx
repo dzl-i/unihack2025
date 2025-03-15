@@ -13,10 +13,10 @@ export default function ChatRedirect() {
     const fetchFirstProject = async () => {
       try {
         const { data, error } = await request("GET", "/project/list");
-        
+
         if (error || !data || data.length === 0) {
-          // If no projects or error, redirect to project creation page WHICH IS NOT CURRENTLY IMPLEMENTED
-          router.push("/projects/new");
+          // TODO: If no projects or error, redirect to project creation page WHICH IS NOT CURRENTLY IMPLEMENTED
+          router.push("/");
         } else {
           // Redirect to the first project's chat
           const firstProjectId = data[0].projectId;
@@ -24,8 +24,8 @@ export default function ChatRedirect() {
         }
       } catch (err) {
         console.error("Failed to fetch projects:", err);
-        // Fallback to project creation on error WHICH IS NOT CURRENTLY IMPLEMENTED
-        router.push("/projects/new");
+        // TODO: Fallback to project creation on error WHICH IS NOT CURRENTLY IMPLEMENTED
+        router.push("/");
       } finally {
         setIsLoading(false);
       }

@@ -1,15 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { ProfileDropdown } from "./ProfileDropdown";
+import { ProfileDropdown, User } from "./ProfileDropdown";
 import {
-  Sidebar as ShadcnSidebar,
-  SidebarContent,
+  SidebarContent as ShadcnSidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Loader, User, Users } from "lucide-react";
+import { Loader, User as UserIcon, Users } from "lucide-react";
 import { Workspace, WorkspaceDropdown } from "./WorkspaceDropdown";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
@@ -17,41 +16,46 @@ import Logo from "@/components/logo";
 import useQuery from "@/hooks/useRequest";
 import DataSourcesList from "./DataSourcesList";
 import { DocumentFile } from "./DocumentViewerSidebar";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export function Sidebar({
+export type Project = {
+  code: string;
+  isShared: boolean;
+  name: string;
+  projectId: string;
+  users: User[];
+  dataSource: any;
+  messages: any;
+};
+
+export function SidebarContent({
+  projectId,
   setSelectedFile,
 }: {
+  projectId: string;
   setSelectedFile: (file?: DocumentFile) => void;
 }) {
-  const { data: user } = useQuery("/user/profile");
-  const { data: workspaces, refetch: refetchWorkspaces } =
-    useQuery("/project/list");
-  const [activeWorkspace, setActiveWorkspace] = React.useState<
-    Workspace | undefined
-  >(undefined);
+  const router = useRouter();
 
-  const normalizedWorkspaces = React.useMemo(
-    () =>
-      workspaces != null
-        ? workspaces.map(
-            (workspace: Partial<{ name: string; isShared: boolean }>) => ({
-              projectId: workspace.projectId,
-              name: workspace.name,
-              icon: workspace.isShared ? Users : User,
-            })
-          )
-        : [],
-    [workspaces]
-  );
+  // Query data required for sidebar
+  const { user, setUser } = useAuth();
+  const { data: project, error } = useQuery(`/project/${projectId}`);
 
-  React.useEffect(() => {
-    if (normalizedWorkspaces != null && activeWorkspace == null) {
-      setActiveWorkspace(normalizedWorkspaces[0]);
-    }
-  }, [activeWorkspace, normalizedWorkspaces]);
+  // Go back to landing page
+  if (error) {
+    toast("There's something wrong. Please try again.");
+    router.push("/");
+  }
+
+  const handleOnWorkspaceChange = (workspaceId: string) => {
+    router.push(`/chat/${workspaceId}`);
+  };
 
   return (
-    <ShadcnSidebar>
+    <>
       <SidebarHeader className="p-4">
         <div className="flex gap-2 mb-2 cursor-default">
           <Logo />
@@ -60,18 +64,18 @@ export function Sidebar({
           </p>
         </div>
         <div className="group-data-[collapsible=icon]:hidden">
-          <WorkspaceDropdown
-            activeWorkspace={activeWorkspace}
-            setActiveWorkspace={setActiveWorkspace}
-            workspaces={normalizedWorkspaces}
-            refetchWorkspaces={refetchWorkspaces}
-          />
+          <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+            <WorkspaceDropdown
+              projectId={projectId}
+              onWorkspaceChange={handleOnWorkspaceChange}
+            />
+          </Suspense>
         </div>
       </SidebarHeader>
       <div className="px-4 w-full">
         <div className="h-px bg-input w-full"></div>
       </div>
-      <SidebarContent className="p-2">
+      <ShadcnSidebarContent className="p-2">
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <Suspense
             fallback={
@@ -83,11 +87,11 @@ export function Sidebar({
             <DataSourcesList onFileSelected={setSelectedFile} />
           </Suspense>
         </SidebarGroup>
-      </SidebarContent>
+      </ShadcnSidebarContent>
       <SidebarFooter className="space-y-2 group-data-[collapsible=icon]:hidden p-4">
         <AddCollaboratorsDialog />
-        <ProfileDropdown user={user} />
+        {user && <ProfileDropdown />}
       </SidebarFooter>
-    </ShadcnSidebar>
+    </>
   );
 }

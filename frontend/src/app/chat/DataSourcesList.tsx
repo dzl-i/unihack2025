@@ -56,9 +56,13 @@ export default function DataSourcesList({
       const formData = new FormData();
       formData.append("file", files[0]);
 
-      const { data, error } = await request("POST", `/project/${project_id}/upload`, {
-        body: formData,
-      });
+      const { data, error } = await request(
+        "POST",
+        `/project/${project_id}/upload`,
+        {
+          body: formData,
+        }
+      );
 
       if (error) {
         toast.error("Failed to upload files");
