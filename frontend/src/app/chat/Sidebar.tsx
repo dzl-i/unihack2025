@@ -16,6 +16,7 @@ import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
 import Logo from "@/components/logo";
 import useQuery from "@/hooks/useRequest";
+import DataSourcesList from "./DataSourcesList";
 
 export function Sidebar() {
   const { data: user } = useQuery("/user/profile");
@@ -70,7 +71,7 @@ export function Sidebar() {
               </div>
             }
           >
-            {/* <DataSourcesList /> */}
+            <DataSourcesList />
           </Suspense>
         </SidebarGroup>
       </SidebarContent>
