@@ -53,7 +53,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3001", "https://collabai.denzeliskandar.com"],
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -62,7 +62,7 @@ const io = new SocketIOServer(httpServer, {
 
 // Use middleware that allows for access from other domains
 app.use(cors({
-  origin: ["http://localhost:3001"],
+  origin: ["http://localhost:3001", "https://collabai.denzeliskandar.com"],
   credentials: true
 }));
 
