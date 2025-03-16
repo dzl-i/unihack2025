@@ -17,7 +17,6 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import ChatWidget from "../ChatWidget";
 import { DataSource } from "../DataSourcesList";
-import { Cosmograph } from "@cosmograph/react";
 import Graph from "../Graph";
 
 export default function Page() {

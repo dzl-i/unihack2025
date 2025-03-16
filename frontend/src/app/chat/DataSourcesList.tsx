@@ -62,9 +62,9 @@ export default function DataSourcesList({
         // Make sure data has the correct structure
         const newDataSource: DataSource = {
           dataSourceId: data.dataSourceId || data.id || data._id,
-          name: data.name || files[0].name
+          name: data.name || files[0].name,
         };
-        
+
         setDatas((prev) => [...prev, newDataSource]);
         toast.success("File uploaded successfully");
       }
@@ -81,13 +81,17 @@ export default function DataSourcesList({
     try {
       const { error } = await request(
         "DELETE",
-        `/project/data/${dataSourceId}`,
+        `/project/data/${dataSourceId}`
       );
 
       if (error) {
-        toast.error(`${error}\nProjectId: ${project.projectId}\ndataSourceId: ${dataSourceId}`);
+        toast.error(
+          `${error}\nProjectId: ${project.projectId}\ndataSourceId: ${dataSourceId}`
+        );
       } else {
-        setDatas((prev) => prev.filter(ds => ds.dataSourceId !== dataSourceId));
+        setDatas((prev) =>
+          prev.filter((ds) => ds.dataSourceId !== dataSourceId)
+        );
         toast.success("Data source deleted successfully");
       }
     } catch (err) {
@@ -103,7 +107,7 @@ export default function DataSourcesList({
   }, [project]);
 
   // Add this filtered data sources logic before the return statement
-  const filteredDataSources = datas.filter(data => 
+  const filteredDataSources = datas.filter((data) =>
     data.name.toLowerCase().includes(input.toLowerCase())
   );
 
@@ -168,19 +172,22 @@ export default function DataSourcesList({
                 <DialogHeader>
                   <DialogTitle>Delete Data Source</DialogTitle>
                   <DialogDescription>
-                    Are you sure you want to delete &quot;{data.name}&quot;? This action cannot be undone.
+                    Are you sure you want to delete &quot;{data.name}&quot;?
+                    This action cannot be undone.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <DialogClose asChild>
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     onClick={() => handleDelete(data.dataSourceId)}
                     disabled={deletingId === data.dataSourceId}
                   >
-                    {deletingId === data.dataSourceId ? 'Deleting...' : 'Delete'}
+                    {deletingId === data.dataSourceId
+                      ? "Deleting..."
+                      : "Delete"}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -189,7 +196,7 @@ export default function DataSourcesList({
         ))}
         {filteredDataSources.length === 0 && input && (
           <div className="text-center py-4 text-sm text-muted-foreground">
-            No data sources found matching &quot;{input}&quot;
+            No data sources found matching: {input}
           </div>
         )}
       </div>

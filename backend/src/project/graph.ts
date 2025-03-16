@@ -38,7 +38,6 @@ export async function projectGetGraph(userId: string, projectId: string) {
   `;
 
   try {
-    console.log("inside graph");
     const flow = await loadLangflow();
     const response = await flow.run(contentPrompt, {
       tweaks: {

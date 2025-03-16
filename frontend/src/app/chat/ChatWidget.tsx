@@ -96,11 +96,11 @@ export default function ChatWidget({ project }: { project: Project }) {
     <main className="p-3">
       {/* Chat messages */}
       <div className="h-[calc(100vh_-_200px)] space-y-2 justify-end p-3 overflow-y-auto">
-        {messages.map((message, index) =>
-          message.sender.userId === user?.userId ? (
-            <SenderChatBubble key={index} message={message} />
+        {messages.map(({ content, sender }, index) =>
+          sender.userId === user?.userId ? (
+            <SenderChatBubble key={index} message={{ content, sender }} />
           ) : (
-            <ReceiverChatBubble key={index} message={message} />
+            <ReceiverChatBubble key={index} message={{ content, sender }} />
           )
         )}
         {/* Loading response */}
@@ -122,7 +122,7 @@ export default function ChatWidget({ project }: { project: Project }) {
           className="flex-1 outline-none resize-none"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder={isLoading ? "Sending..." : "Send a message..."}
+          placeholder={isLoading ? "Sending..." : "Send a .."}
           rows={3}
         />
         <Button

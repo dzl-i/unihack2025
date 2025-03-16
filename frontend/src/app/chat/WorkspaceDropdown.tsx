@@ -52,11 +52,7 @@ export function WorkspaceDropdown({
   const router = useRouter();
 
   // Get workspaces value
-  const {
-    data: workspaces,
-    error: workspaceError,
-    refetch: refetchWorkspaces,
-  } = useQuery("/project/list");
+  const { data: workspaces, error: workspaceError } = useQuery("/project/list");
   const normalizedWorkspace = workspaces
     ? workspaces.map(
         (
@@ -114,7 +110,6 @@ export function WorkspaceDropdown({
 
   const handleOnWorkspaceChange = (projectId: string) => {
     onWorkspaceChange(projectId);
-    refetchWorkspaces();
   };
 
   if (workspaceError) {
@@ -142,10 +137,14 @@ export function WorkspaceDropdown({
                   className="border border-foreground/15"
                 >
                   <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
-                    {activeWorkspace ? (<activeWorkspace.icon className="size-4" />) : (<UserIcon className="size-4" />)}
+                    {activeWorkspace ? (
+                      <activeWorkspace.icon className="size-4" />
+                    ) : (
+                      <UserIcon className="size-4" />
+                    )}
                   </div>
                   <span className="truncate font-medium capitalize">
-                    {activeWorkspace ? (activeWorkspace.name) : ("Default Project")}
+                    {activeWorkspace ? activeWorkspace.name : "Default Project"}
                   </span>
                   <ChevronDown className="ml-auto" />
                 </SidebarMenuButton>
