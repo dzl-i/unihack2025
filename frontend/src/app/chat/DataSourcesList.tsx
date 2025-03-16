@@ -36,6 +36,7 @@ export default function DataSourcesList({
   );
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -67,6 +68,29 @@ export default function DataSourcesList({
       console.error(err);
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleDelete = async (dataSourceId: string) => {
+    setDeletingId(dataSourceId);
+    try {
+      const { error } = await request(
+        "DELETE",
+        `/project/data/${project.projectId}`,
+        { id: dataSourceId }
+      );
+
+      if (error) {
+        toast.error(`${error}\nProjectId: ${project.projectId}\ndataSourceId: ${dataSourceId}`);
+      } else {
+        setDatas((prev) => prev.filter(ds => ds.dataSourceId !== dataSourceId));
+        toast.success("Data source deleted successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Try again");
+      console.error(err);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -142,7 +166,13 @@ export default function DataSourcesList({
                   <DialogClose asChild>
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
-                  <Button variant="destructive">Delete</Button>
+                  <Button 
+                    variant="destructive" 
+                    onClick={() => handleDelete(data.dataSourceId)}
+                    disabled={deletingId === data.dataSourceId}
+                  >
+                    {deletingId === data.dataSourceId ? 'Deleting...' : 'Delete'}
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
