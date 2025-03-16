@@ -71,7 +71,7 @@ export default function LandingPage() {
           <div className="before:from-bg-white/5 shadow-white-gradient before:to-bg-white/0 relative mx-auto block w-[75%] before:absolute before:-inset-2 before:-z-10 before:rounded-lg before:border before:border-white/20 before:bg-gradient-to-br before:backdrop-blur-md">
             <Image
               className="inline-block rounded-md"
-              src="/landing.png"
+              src="/landing.svg"
               width={1600}
               height={1600}
               alt="Landing page preview"
