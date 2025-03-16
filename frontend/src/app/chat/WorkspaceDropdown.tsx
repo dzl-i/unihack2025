@@ -142,10 +142,10 @@ export function WorkspaceDropdown({
                   className="border border-foreground/15"
                 >
                   <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <activeWorkspace.icon className="size-4" />
+                    {activeWorkspace ? (<activeWorkspace.icon className="size-4" />) : (<UserIcon className="size-4" />)}
                   </div>
                   <span className="truncate font-medium capitalize">
-                    {activeWorkspace.name}
+                    {activeWorkspace ? (activeWorkspace.name) : ("Default Project")}
                   </span>
                   <ChevronDown className="ml-auto" />
                 </SidebarMenuButton>
