@@ -1,7 +1,7 @@
 "use client";
 
 import { File, Loader, Search, Trash2, Upload } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +43,15 @@ export default function DataSourcesList({
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
+  useEffect(() => {
+    request("GET", `/project/${project_id}`)
+      .then(resp => setDatas(resp.data.dataSources || []))
+      .catch((error) => {
+        console.error("Failed to fetch data:", error);
+        setDatas([]);
+      });
+  }, [])
+
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -59,9 +68,7 @@ export default function DataSourcesList({
       const { data, error } = await request(
         "POST",
         `/project/${project_id}/upload`,
-        {
-          body: formData,
-        }
+        formData
       );
 
       if (error) {
