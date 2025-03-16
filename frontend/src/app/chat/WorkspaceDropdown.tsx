@@ -52,7 +52,7 @@ export function WorkspaceDropdown({
   const router = useRouter();
 
   // Get workspaces value
-  let {
+  const {
     data: workspaces,
     error: workspaceError,
     refetch: refetchWorkspaces,

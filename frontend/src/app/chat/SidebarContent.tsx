@@ -8,18 +8,18 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Loader, User as UserIcon, Users } from "lucide-react";
-import { Workspace, WorkspaceDropdown } from "./WorkspaceDropdown";
+import { Loader } from "lucide-react";
+import { WorkspaceDropdown } from "./WorkspaceDropdown";
 import { Suspense } from "react";
 import AddCollaboratorsDialog from "./AddCollaboratorsDialog";
 import Logo from "@/components/logo";
 import useQuery from "@/hooks/useRequest";
-import DataSourcesList from "./DataSourcesList";
-import { DocumentFile } from "./DocumentViewerSidebar";
+import DataSourcesList, { DataSource } from "./DataSourcesList";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Message } from "./ChatWidget";
 
 export type Project = {
   code: string;
@@ -27,8 +27,8 @@ export type Project = {
   name: string;
   projectId: string;
   users: User[];
-  dataSource: any;
-  messages: any;
+  dataSources: DataSource[];
+  messages: Message[];
 };
 
 export function SidebarContent({
@@ -36,12 +36,12 @@ export function SidebarContent({
   setSelectedFile,
 }: {
   projectId: string;
-  setSelectedFile: (file?: DocumentFile) => void;
+  setSelectedFile: (file?: DataSource) => void;
 }) {
   const router = useRouter();
 
   // Query data required for sidebar
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const { data: project, error } = useQuery(`/project/${projectId}`);
 
   // Go back to landing page
@@ -84,7 +84,10 @@ export function SidebarContent({
               </div>
             }
           >
-            <DataSourcesList onFileSelected={setSelectedFile} />
+            <DataSourcesList
+              project={project}
+              onFileSelected={setSelectedFile}
+            />
           </Suspense>
         </SidebarGroup>
       </ShadcnSidebarContent>

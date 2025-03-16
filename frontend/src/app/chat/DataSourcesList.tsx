@@ -15,42 +15,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { DocumentFile } from "./DocumentViewerSidebar";
-import { useParams } from "next/navigation";
 import { request } from "@/hooks/useRequest";
+import { Project } from "./SidebarContent";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export type Data = {
+export type DataSource = {
+  dataSourceId: string;
   name: string;
-  description: string;
-  fileType: string;
-  url: string;
-};
-
-const mapFileTypeToIcon = (fileType: string): { icon: React.ElementType } => {
-  switch (fileType) {
-    default:
-      return { icon: File };
-  }
 };
 
 export default function DataSourcesList({
+  project,
   onFileSelected,
 }: {
-  onFileSelected: (file: DocumentFile) => void;
+  project: Project;
+  onFileSelected: (file: DataSource) => void;
 }) {
-  const { project_id } = useParams();
-  const [datas, setDatas] = useState<Data[]>([]);
+  const [datas, setDatas] = useState<DataSource[]>(
+    project ? project.dataSources : []
+  );
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-
-  useEffect(() => {
-    request("GET", `/project/${project_id}`)
-      .then(resp => setDatas(resp.data.dataSources || []))
-      .catch((error) => {
-        console.error("Failed to fetch data:", error);
-        setDatas([]);
-      });
-  }, [])
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -67,7 +52,7 @@ export default function DataSourcesList({
 
       const { data, error } = await request(
         "POST",
-        `/project/${project_id}/upload`,
+        `/project/${project.projectId}/upload`,
         formData
       );
 
@@ -84,6 +69,14 @@ export default function DataSourcesList({
       setIsUploading(false);
     }
   };
+
+  useEffect(() => {
+    setDatas(project ? project.dataSources : []);
+  }, [project]);
+
+  if (!project) {
+    return <Skeleton className="bg-purple-500" />;
+  }
 
   return (
     <div className="space-y-4">
@@ -124,42 +117,35 @@ export default function DataSourcesList({
       </div>
       {/* Data source list */}
       <div className="overflow-y-auto">
-        {datas.map((data, index) => {
-          const dataIcon = mapFileTypeToIcon(data.fileType);
-          return (
-            <Button
-              key={index}
-              variant="ghost"
-              className="w-full h-auto"
-              onClick={() => onFileSelected({ name: data.name, url: data.url })}
-            >
-              <dataIcon.icon className="min-w-6 min-h-6" />
-              <div className="min-w-0 flex-1 text-left">
-                <p className="truncate font-medium">{data.name}</p>
-                <p className="truncate text-sm opacity-50">
-                  {data.description}
-                </p>
-              </div>
-              <Dialog>
-                <DialogTrigger>
-                  <Trash2 className="min-w-6 min-h-6 text-destructive" />
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Yippee</DialogTitle>
-                    <DialogDescription>ts pmo icl</DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="ghost">Cancel</Button>
-                    </DialogClose>
-                    <Button variant="destructive">Remove</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </Button>
-          );
-        })}
+        {datas.map((data, index) => (
+          <div
+            key={index}
+            className="w-full h-auto flex gap-2 duration-100 cursor-pointer hover:bg-foreground/15 p-3 rounded-lg"
+            onClick={() => onFileSelected(data)}
+          >
+            <File className="min-w-6 min-h-6" />
+            <div className="min-w-0 flex-1 text-left">
+              <p className="truncate font-medium">{data.name}</p>
+            </div>
+            <Dialog>
+              <DialogTrigger>
+                <Trash2 className="min-w-6 min-h-6 text-destructive" />
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Yippee</DialogTitle>
+                  <DialogDescription>ts pmo icl</DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="ghost">Cancel</Button>
+                  </DialogClose>
+                  <Button variant="destructive">Remove</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        ))}
       </div>
     </div>
   );

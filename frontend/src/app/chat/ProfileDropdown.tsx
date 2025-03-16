@@ -30,7 +30,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { convertNameToAbbreviation } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
-import useQuery, { request } from "@/hooks/useRequest";
+import { request } from "@/hooks/useRequest";
 import { useState } from "react";
 
 export type User = {
