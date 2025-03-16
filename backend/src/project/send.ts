@@ -29,7 +29,17 @@ export async function projectSendMessage(userId: string, projectId: string, cont
     const aiMessage = await sendMessage(process.env.ADMIN_ID as string, projectId, response.chatOutputText() || "Could not retrieve message at this time");
     if (aiMessage === null) throw { status: 400, message: "Failed to send AI message." };
     
-    return response.chatOutputText() || "Could not retrieve message at this time"
+    return {
+      messageId: aiMessage.id,
+      content: aiMessage.content,
+      createdAt: aiMessage.createdAt,
+      sender: {
+        userId: aiMessage.sender.id,
+        name: aiMessage.sender.name,
+        email: aiMessage.sender.email,
+        profilePic: aiMessage.sender.profilePic,
+      },
+    }
   } catch (e) {
     throw { status: 400, message: "Error retrieving langflow message" }
   }
