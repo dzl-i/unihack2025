@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Project } from "./SidebarContent";
 
 const SenderChatBubble = ({ message }: { message: Message }) => (
-  <div className="p-3 rounded-lg ml-auto w-fit max-w-[calc(100%_-_24px)] bg-primary text-foreground">
+  <div className="p-3 rounded-lg ml-auto w-fit max-w-[calc(100%_-_24px)] bg-purple-gradient-bottom text-foreground">
     {/* Chat Messages */}
     <p className="flex-1 text-right">{message.content}</p>
   </div>
@@ -128,7 +128,7 @@ export default function ChatWidget({ project }: { project: Project }) {
         <Button
           type="submit"
           variant="default"
-          className="rounded-full"
+          className="rounded-full bg-purple-gradient-bottom"
           disabled={!content.length || isLoading}
         >
           {isLoading ? <Loader className="animate-spin" /> : <Send />}
