@@ -1,6 +1,6 @@
 import { DeleteObjectCommand, waitUntilObjectNotExists } from "@aws-sdk/client-s3";
-import { deleteDataSource, getDataSourceById } from "../helper/dataHelper";
-import { s3Client, bucketName } from "../helper/s3Client";
+import { deleteDataSource, getDataSourceById } from "../helper/dataHelper.js";
+import { s3Client, bucketName } from "../helper/s3Client.js";
 
 export async function projectDeleteDataSource(userId: string, dataSourceId: string) {
   const dataSource = await getDataSourceById(dataSourceId);

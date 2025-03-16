@@ -24,7 +24,7 @@ export default function Page() {
   // Load project details
   const params = useParams<{ project_id: string }>();
   const projectId = params.project_id;
-  const { error } = useQuery(`/project/${projectId}`);
+  const { data: project, error } = useQuery(`/project/${projectId}`);
 
   // Handle file viewer
   const [selectedFile, setSelectedFile] = useState<DataSource | undefined>(
@@ -65,7 +65,7 @@ export default function Page() {
             Graph View
           </Button>
         </header>
-        <ChatWidget projectId={projectId} />
+        <ChatWidget project={project} />
       </SidebarInset>
       {selectedFile && (
         <DocumentViewerSidebar

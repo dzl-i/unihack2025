@@ -1,4 +1,4 @@
-import { getHash } from "./util";
+import { getHash } from "./util.js";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();

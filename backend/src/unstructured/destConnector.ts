@@ -1,4 +1,4 @@
-import { api_endpoint, astra_collection, astra_dest_name, astra_keyspace, headers, token, unstructured_api_url } from './unstructured';
+import { api_endpoint, astra_collection, astra_dest_name, astra_keyspace, headers, token, unstructured_api_url } from './unstructured.js';
 
 interface CreateDestResponse {
   id: string;

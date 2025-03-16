@@ -1,4 +1,4 @@
-import { createProject } from '../helper/projectHelper';
+import { createProject } from '../helper/projectHelper.js';
 
 export async function projectCreate(userId: string, projectName: string) {
   // Generate random code for the project

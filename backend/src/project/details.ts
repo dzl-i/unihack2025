@@ -1,4 +1,4 @@
-import { detailProject } from "../helper/projectHelper";
+import { detailProject } from "../helper/projectHelper.js";
 
 export async function projectDetails(userId: string, projectId: string) {
   const project = await detailProject(projectId);

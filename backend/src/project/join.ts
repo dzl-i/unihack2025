@@ -1,4 +1,4 @@
-import { joinProject } from "../helper/projectHelper";
+import { joinProject } from "../helper/projectHelper.js";
 
 export async function projectJoin(userId: string, code: string) {
   const project = await joinProject(userId, code);

@@ -1,4 +1,4 @@
-import { getUserById } from "../helper/userHelper";
+import { getUserById } from "../helper/userHelper.js";
 
 export async function userProfile(userId: string) {
   // Prisma Queries

@@ -6,7 +6,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
-import { get, Server } from 'http';
+import { Server } from 'http';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Server as SocketIOServer } from 'socket.io';
 import multer from 'multer';
@@ -18,24 +18,24 @@ import YAML from 'yamljs';
 import path from 'path';
 
 // Helper functions
-import { deleteToken, generateToken } from './helper/tokenHelper';
-import { getUserById } from './helper/userHelper';
+import { deleteToken, generateToken } from './helper/tokenHelper.js';
+import { getUserById } from './helper/userHelper.js';
 
 // Route imports
-import { authRegister } from './auth/register';
-import { authLogin } from './auth/login';
-import { authLogout } from './auth/logout';
-import { userProfile } from './user/profile';
-import { projectCreate } from './project/create';
-import { projectList } from './project/list';
-import { projectDetails } from './project/details';
-import { projectDelete } from './project/delete';
-import { projectJoin } from './project/join';
-import { projectSendMessage } from './project/send';
-import { projectUploadDataSource } from './project/uploadData';
-import { projectDeleteDataSource } from './project/deleteData';
-import { projectGetData } from './project/getData';
-import { projectAddCollaborator } from './project/addCollaborator';
+import { authRegister } from './auth/register.js';
+import { authLogin } from './auth/login.js';
+import { authLogout } from './auth/logout.js';
+import { userProfile } from './user/profile.js';
+import { projectCreate } from './project/create.js';
+import { projectList } from './project/list.js';
+import { projectDetails } from './project/details.js';
+import { projectDelete } from './project/delete.js';
+import { projectJoin } from './project/join.js';
+import { projectSendMessage } from './project/send.js';
+import { projectUploadDataSource } from './project/uploadData.js';
+import { projectDeleteDataSource } from './project/deleteData.js';
+import { projectGetData } from './project/getData.js';
+import { projectAddCollaborator } from './project/addCollaborator.js';
 
 
 interface MulterRequest extends Request {

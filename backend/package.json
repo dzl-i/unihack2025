@@ -6,7 +6,7 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx prisma migrate deploy && node dist/server.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +15,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
     "@aws-sdk/s3-request-presigner": "^3.758.0",
-    "@datastax/langflow-client": "^0.2.1",
     "@datastax/astra-db-ts": "^1.5.0",
+    "@datastax/langflow-client": "^0.2.1",
     "@prisma/client": "^6.5.0",
     "@types/multer": "^1.4.12",
     "cookie-parser": "^1.4.7",
@@ -50,6 +50,7 @@
     "eslint": "^9.22.0",
     "nodemon": "^3.1.9",
     "prisma": "^6.5.0",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   }
 }

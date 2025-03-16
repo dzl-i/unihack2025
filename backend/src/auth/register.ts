@@ -1,11 +1,11 @@
 import validator from 'validator';
 
-import { checkEmailExists } from '../helper/authHelper';
-import { generateToken } from '../helper/tokenHelper';
-import { getHash } from '../helper/util';
+import { checkEmailExists } from '../helper/authHelper.js';
+import { generateToken } from '../helper/tokenHelper.js';
+import { getHash } from '../helper/util.js';
 
 import { PrismaClient } from "@prisma/client";
-import { projectCreate } from '../project/create';
+import { projectCreate } from '../project/create.js';
 const prisma = new PrismaClient();
 
 export async function authRegister(name: string, email: string, password: string, username: string, profilePic: string) {

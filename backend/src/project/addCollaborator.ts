@@ -1,5 +1,5 @@
-import { addCollaborator, getProjectById } from "../helper/projectHelper";
-import { getUserByEmail } from "../helper/userHelper";
+import { addCollaborator, getProjectById } from "../helper/projectHelper.js";
+import { getUserByEmail } from "../helper/userHelper.js";
 
 export async function projectAddCollaborator(userId: string, projectId: string, collaboratorEmail: string) {
   const project = await getProjectById(projectId);

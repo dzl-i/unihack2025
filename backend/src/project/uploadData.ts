@@ -1,11 +1,11 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { uploadDataSource } from "../helper/dataHelper";
-import { getProjectById } from "../helper/projectHelper";
-import { s3Client, bucketName } from "../helper/s3Client";
-import { createSourceConnector } from "../unstructured/sourceConnector";
-import { createWorkflow } from "../unstructured/createWorkflow";
-import { runWorkflow } from "../unstructured/runWorkflow";
-import { unstructured_dest_connector_id } from "../unstructured/unstructured";
+import { uploadDataSource } from "../helper/dataHelper.js";
+import { getProjectById } from "../helper/projectHelper.js";
+import { s3Client, bucketName } from "../helper/s3Client.js";
+import { createSourceConnector } from "../unstructured/sourceConnector.js";
+import { createWorkflow } from "../unstructured/createWorkflow.js";
+import { runWorkflow } from "../unstructured/runWorkflow.js";
+import { unstructured_dest_connector_id } from "../unstructured/unstructured.js";
 
 export async function projectUploadDataSource(userId: string, projectId: string, file: Express.Multer.File | undefined) {
   if (!file) throw { status: 400, message: "No file provided." }

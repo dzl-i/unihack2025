@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import crypto from "crypto";
 
-import { getHash } from "./util";
-import { getUserByEmail } from "./userHelper";
+import { getHash } from "./util.js";
+import { getUserByEmail } from "./userHelper.js";
 
 const prisma = new PrismaClient();
 

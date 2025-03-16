@@ -1,6 +1,6 @@
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
-import { deleteProject, detailProject } from "../helper/projectHelper";
-import { s3Client, bucketName } from "../helper/s3Client";
+import { deleteProject, detailProject } from "../helper/projectHelper.js";
+import { s3Client, bucketName } from "../helper/s3Client.js";
 
 export async function projectDelete(userId: string, projectId: string) {
   const project = await detailProject(projectId);
