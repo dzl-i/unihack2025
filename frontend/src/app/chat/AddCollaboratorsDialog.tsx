@@ -21,10 +21,10 @@ export default function AddCollaboratorsDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="border border-foreground/5" variant="secondary">
+        {/* <Button className="border border-foreground/5" variant="secondary">
           <UserPlus />
           Add Collaborators
-        </Button>
+        </Button> */}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px]">
         <DialogHeader>
