@@ -2,12 +2,17 @@ import { loadLangflow } from "../helper/langflowClient.js";
 import { getProjectById, sendMessage } from "../helper/projectHelper.js";
 import { getUserById } from "../helper/userHelper.js";
 
-export async function projectSendMessage(userId: string, projectId: string, content: string) {
+export async function projectSendMessage(
+  userId: string,
+  projectId: string,
+  content: string
+) {
   const project = await getProjectById(projectId);
   if (project === null) throw { status: 404, message: "Project not found." };
 
   const userIds = project.users.map((user) => user.userId);
-  if (!userIds.includes(userId)) throw { status: 403, message: "You do not have access to this project." };
+  if (!userIds.includes(userId))
+    throw { status: 403, message: "You do not have access to this project." };
 
   const user = await getUserById(userId);
   if (user === null) throw { status: 404, message: "User not found." };
@@ -19,14 +24,17 @@ export async function projectSendMessage(userId: string, projectId: string, cont
     const flow = await loadLangflow();
     const response = await flow.run(content, {
       tweaks: {
-        "AstraDB-lvoxd":
-        {
-          "advanced_search_filter": `{\"\\\"metadata.metadata.data_source.record_locator.metadata.projectid\\\"\":\"${projectId}\"}`
-        }
-      }
+        "AstraDB-lvoxd": {
+          advanced_search_filter: `{\"\\\"metadata.metadata.data_source.record_locator.metadata.projectid\\\"\":\"${projectId}\"}`,
+        },
+      },
     });
 
-    const aiMessage = await sendMessage(process.env.ADMIN_ID as string, projectId, response.chatOutputText() || "Could not retrieve message at this time");
+    const aiMessage = await sendMessage(
+      process.env.ADMIN_ID as string,
+      projectId,
+      response.chatOutputText() || "Could not retrieve message at this time"
+    );
     if (aiMessage === null) throw { status: 400, message: "Failed to send AI message." };
 
     return {
@@ -39,9 +47,9 @@ export async function projectSendMessage(userId: string, projectId: string, cont
         email: aiMessage.sender.email,
         profilePic: aiMessage.sender.profilePic,
       },
-    }
+    };
   } catch (e) {
     console.log(e);
-    throw { status: 400, message: "Error retrieving langflow message" }
+    throw { status: 400, message: "Error retrieving langflow message" };
   }
 }
