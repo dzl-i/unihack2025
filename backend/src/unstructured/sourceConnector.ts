@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { unstructured_api_url, headers } from './unstructured';
+import { unstructured_api_url, headers } from './unstructured.js';
 
 interface CreateSourceResponse {
   id: string;

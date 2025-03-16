@@ -1,4 +1,4 @@
-import { headers, unstructured_api_url } from "./unstructured"
+import { headers, unstructured_api_url } from "./unstructured.js"
 
 interface CreateWorkflowResponse {
 id: string;

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cosmograph/react": "^1.4.2",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^4.1.3",
     "@radix-ui/react-avatar": "^1.1.3",

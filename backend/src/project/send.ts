@@ -1,6 +1,6 @@
-import { loadLangflow } from "../helper/langflowClient";
-import { getProjectById, sendMessage } from "../helper/projectHelper";
-import { getUserById } from "../helper/userHelper";
+import { loadLangflow } from "../helper/langflowClient.js";
+import { getProjectById, sendMessage } from "../helper/projectHelper.js";
+import { getUserById } from "../helper/userHelper.js";
 
 export async function projectSendMessage(userId: string, projectId: string, content: string) {
   const project = await getProjectById(projectId);
@@ -28,7 +28,7 @@ export async function projectSendMessage(userId: string, projectId: string, cont
 
     const aiMessage = await sendMessage(process.env.ADMIN_ID as string, projectId, response.chatOutputText() || "Could not retrieve message at this time");
     if (aiMessage === null) throw { status: 400, message: "Failed to send AI message." };
-    
+
     return {
       messageId: aiMessage.id,
       content: aiMessage.content,
@@ -41,6 +41,7 @@ export async function projectSendMessage(userId: string, projectId: string, cont
       },
     }
   } catch (e) {
+    console.log(e);
     throw { status: 400, message: "Error retrieving langflow message" }
   }
 }

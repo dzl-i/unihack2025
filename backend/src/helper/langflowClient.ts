@@ -1,3 +1,5 @@
+import { LangflowClient } from "@datastax/langflow-client";
+
 const langflowId = process.env.LANGFLOW_ID!;
 const apiKey = process.env.LANGFLOW_KEY!;
 const flowId = process.env.LANGFLOW_FLOWID!;

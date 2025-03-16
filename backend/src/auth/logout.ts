@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { checkValidToken, deleteToken, getUserFromToken } from "../helper/tokenHelper";
+import { checkValidToken, deleteToken, getUserFromToken } from "../helper/tokenHelper.js";
 
 export async function authLogout(refreshToken: string) {
   // Check if the refresh token exists in the database

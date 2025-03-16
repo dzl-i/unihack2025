@@ -36,6 +36,7 @@ export default function DataSourcesList({
   );
   const [input, setInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -46,7 +47,6 @@ export default function DataSourcesList({
     setIsUploading(true);
 
     try {
-      // Now using the dynamic project_id from URL parameters
       const formData = new FormData();
       formData.append("file", files[0]);
 
@@ -59,7 +59,13 @@ export default function DataSourcesList({
       if (error) {
         toast.error("Failed to upload files");
       } else {
-        setDatas((prev) => [...prev, data]);
+        // Make sure data has the correct structure
+        const newDataSource: DataSource = {
+          dataSourceId: data.dataSourceId || data.id || data._id,
+          name: data.name || files[0].name
+        };
+        
+        setDatas((prev) => [...prev, newDataSource]);
         toast.success("File uploaded successfully");
       }
     } catch (err) {
@@ -70,9 +76,36 @@ export default function DataSourcesList({
     }
   };
 
+  const handleDelete = async (dataSourceId: string) => {
+    setDeletingId(dataSourceId);
+    try {
+      const { error } = await request(
+        "DELETE",
+        `/project/data/${dataSourceId}`,
+      );
+
+      if (error) {
+        toast.error(`${error}\nProjectId: ${project.projectId}\ndataSourceId: ${dataSourceId}`);
+      } else {
+        setDatas((prev) => prev.filter(ds => ds.dataSourceId !== dataSourceId));
+        toast.success("Data source deleted successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Try again");
+      console.error(err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   useEffect(() => {
     setDatas(project ? project.dataSources : []);
   }, [project]);
+
+  // Add this filtered data sources logic before the return statement
+  const filteredDataSources = datas.filter(data => 
+    data.name.toLowerCase().includes(input.toLowerCase())
+  );
 
   if (!project) {
     return <Skeleton className="bg-purple-500" />;
@@ -117,7 +150,7 @@ export default function DataSourcesList({
       </div>
       {/* Data source list */}
       <div className="overflow-y-auto">
-        {datas.map((data, index) => (
+        {filteredDataSources.map((data, index) => (
           <div
             key={index}
             className="w-full h-auto flex gap-2 duration-100 cursor-pointer hover:bg-foreground/15 p-3 rounded-lg"
@@ -129,23 +162,36 @@ export default function DataSourcesList({
             </div>
             <Dialog>
               <DialogTrigger>
-                <Trash2 className="w-4 h-4 text-destructive" />
+                <Trash2 className="w-4 h-4 text-destructive cursor-pointer" />
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Yippee</DialogTitle>
-                  <DialogDescription>ts pmo icl</DialogDescription>
+                  <DialogTitle>Delete Data Source</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to delete &quot;{data.name}&quot;? This action cannot be undone.
+                  </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <DialogClose asChild>
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
-                  <Button variant="destructive">Remove</Button>
+                  <Button 
+                    variant="destructive" 
+                    onClick={() => handleDelete(data.dataSourceId)}
+                    disabled={deletingId === data.dataSourceId}
+                  >
+                    {deletingId === data.dataSourceId ? 'Deleting...' : 'Delete'}
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
           </div>
         ))}
+        {filteredDataSources.length === 0 && input && (
+          <div className="text-center py-4 text-sm text-muted-foreground">
+            No data sources found matching "{input}"
+          </div>
+        )}
       </div>
     </div>
   );

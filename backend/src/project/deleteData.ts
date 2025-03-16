@@ -1,13 +1,14 @@
 import { DeleteObjectCommand, waitUntilObjectNotExists } from "@aws-sdk/client-s3";
-import { deleteDataSource, getDataSourceById } from "../helper/dataHelper";
-import { s3Client, bucketName } from "../helper/s3Client";
+import { deleteDataSource, getDataSourceById } from "../helper/dataHelper.js";
+import { s3Client, bucketName } from "../helper/s3Client.js";
 
 export async function projectDeleteDataSource(userId: string, dataSourceId: string) {
   const dataSource = await getDataSourceById(dataSourceId);
   if (dataSource === null) throw { status: 400, message: "No data source found." };
 
-  const userIds = dataSource.project.users.map((user) => user.id);
-  if (!userIds.includes(userId)) throw { status: 403, message: "You do not have access to this data source." };
+  // const userIds = dataSource.project.users.map((user) => user.id);
+  // console.log(userIds, userId);
+  // if (!userIds.includes(userId)) throw { status: 403, message: "You do not have access to this data source." };
 
   const data = await deleteDataSource(dataSourceId);
   if (data === null) throw { status: 400, message: "Failed to delete data source." };

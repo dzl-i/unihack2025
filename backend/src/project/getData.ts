@@ -1,7 +1,7 @@
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { s3Client, bucketName } from "../helper/s3Client";
-import { getDataSourceById } from "../helper/dataHelper";
+import { s3Client, bucketName } from "../helper/s3Client.js";
+import { getDataSourceById } from "../helper/dataHelper.js";
 
 export async function projectGetData(dataSourceId: string) {
   const dataSource = await getDataSourceById(dataSourceId);

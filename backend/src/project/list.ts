@@ -1,4 +1,4 @@
-import { listProject } from "../helper/projectHelper";
+import { listProject } from "../helper/projectHelper.js";
 
 export async function projectList(userId: string) {
   const projects = await listProject(userId);

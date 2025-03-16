@@ -1,6 +1,6 @@
-import { generateToken } from "../helper/tokenHelper";
-import { checkBlockedAccount, checkEmailExists, verifyLogin } from "../helper/authHelper";
-import { getUserByEmail } from "../helper/userHelper";
+import { generateToken } from "../helper/tokenHelper.js";
+import { checkBlockedAccount, checkEmailExists, verifyLogin } from "../helper/authHelper.js";
+import { getUserByEmail } from "../helper/userHelper.js";
 
 export async function authLogin(email: string, password: string) {
   // Error Handling
