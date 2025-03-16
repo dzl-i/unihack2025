@@ -1,4 +1,4 @@
-import { flow } from "../helper/langflowClient";
+import { loadLangflow } from "../helper/langflowClient";
 import { getProjectById, sendMessage } from "../helper/projectHelper";
 import { getUserById } from "../helper/userHelper";
 
@@ -16,6 +16,7 @@ export async function projectSendMessage(userId: string, projectId: string, cont
   if (message === null) throw { status: 400, message: "Failed to send message." };
 
   try {
+    const flow = await loadLangflow();
     const response = await flow.run(content, {
       tweaks: {
         "AstraDB-lvoxd":
