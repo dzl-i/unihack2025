@@ -35,38 +35,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = getCookie("refreshToken")?.toString();
-    if (token != null) {
-      // Instead of verifying the token (which requires the secret),
-      // just decode it to read the payload
-      try {
-        // This only decodes the JWT payload without verification
-        // const decoded = jwt.decode(token) as JwtPayload;
-        jwt.decode(token) as JwtPayload;
-
-        // Alternatively, fetch user profile from backend
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/profile`, {
-          credentials: "include",
+    // Check for both tokens - if either exists, try to authenticate
+    const accessToken = getCookie("accessToken")?.toString();
+    const refreshToken = getCookie("refreshToken")?.toString();
+    
+    if (accessToken || refreshToken) {
+      // Regardless of which token exists, try to fetch the user profile
+      // The backend will handle token validation and refresh if needed
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/profile`, {
+        credentials: "include", // Important: send cookies with the request
+      })
+        .then((res) => {
+          if (res.ok) return res.json();
+          throw new Error("Failed to fetch user profile");
         })
-          .then((res) => {
-            if (res.ok) return res.json();
-            throw new Error("Failed to fetch user profile");
-          })
-          .then((userData) => {
-            setUser(userData);
-          })
-          .catch((err) => {
-            console.error("Auth error:", err);
-            setUser(undefined);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      } catch (error) {
-        console.error("Error decoding token:", error);
-        setUser(undefined);
-        setIsLoading(false);
-      }
+        .then((userData) => {
+          setUser(userData);
+        })
+        .catch((err) => {
+          console.error("Auth error:", err);
+          setUser(undefined);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }
