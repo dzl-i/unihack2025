@@ -49,10 +49,7 @@ const prisma = new PrismaClient();
 // Set up web app using JSON
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
-
-
 app.use(cookieParser());
-// app.use(upload.single('file'));
 app.use(express.json({ limit: '50mb' }));
 
 const httpServer = new Server(app);
