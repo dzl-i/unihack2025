@@ -76,8 +76,7 @@ export default function DataSourcesList({
     try {
       const { error } = await request(
         "DELETE",
-        `/project/data/${project.projectId}`,
-        { id: dataSourceId }
+        `/project/data/${dataSourceId}`,
       );
 
       if (error) {
