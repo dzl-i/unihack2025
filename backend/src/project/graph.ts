@@ -7,7 +7,8 @@ export async function projectGetGraph(userId: string, projectId: string) {
   if (project === null) throw { status: 404, message: "Project not found." };
 
   const userIds = project.users.map((user) => user.userId);
-  if (!userIds.includes(userId)) throw { status: 403, message: "You do not have access to this project." };
+  if (!userIds.includes(userId))
+    throw { status: 403, message: "You do not have access to this project." };
 
   const user = await getUserById(userId);
   if (user === null) throw { status: 404, message: "User not found." };
@@ -32,22 +33,26 @@ export async function projectGetGraph(userId: string, projectId: string) {
   link: {
     concept_ids: [concept1_id, concept2_id)
   }
+
+  Return everything as a JSON string
   `;
 
-  console.log("inside graph")
   try {
+    console.log("inside graph");
     const flow = await loadLangflow();
     const response = await flow.run(contentPrompt, {
       tweaks: {
-        "AstraDB-lvoxd":
-        {
-          "advanced_search_filter": `{\"\\\"metadata.metadata.data_source.record_locator.metadata.projectid\\\"\":\"${projectId}\"}`
-        }
-      }
+        "AstraDB-lvoxd": {
+          advanced_search_filter: `{\"\\\"metadata.metadata.data_source.record_locator.metadata.projectid\\\"\":\"${projectId}\"}`,
+        },
+      },
     });
 
-    return response.chatOutputText() || "Could not retrieve message at this time"
+    return (
+      response.chatOutputText() || "Could not retrieve message at this time"
+    );
   } catch (e) {
-    throw { status: 400, message: "Error retrieving langflow message" }
+    console.log(e);
+    throw { status: 400, message: "Error retrieving langflow message" };
   }
 }

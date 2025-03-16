@@ -5,7 +5,7 @@ import useSWR from "swr";
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 export default function useQuery(url: string) {
-  const { data, error, isLoading, mutate } = useSWR(url, (url) =>
+  const { data, error, isLoading, isValidating } = useSWR(url, (url) =>
     fetch(process.env.NEXT_PUBLIC_BASE_URL + url, {
       method: "GET",
       credentials: "include",
@@ -15,8 +15,7 @@ export default function useQuery(url: string) {
     }).then((r) => r.json())
   );
 
-  // Return mutate as refetch so it can be used to refresh data
-  return { data, error, isLoading, refetch: () => mutate() };
+  return { data, error, isLoading, isValidating };
 }
 
 export const request = async (
@@ -26,7 +25,7 @@ export const request = async (
 ) => {
   try {
     const headers: Record<string, string> = {};
-
+    
     // Only set Content-Type for JSON data
     if (!(body instanceof FormData)) {
       headers["Content-Type"] = "application/json";
