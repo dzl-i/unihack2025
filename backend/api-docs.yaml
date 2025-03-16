@@ -225,7 +225,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-
+  /project/{id}/graph:
+    get:
+      summary: Get graph view of a project
+      description: Retrieve common topics and their edges
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project graph
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tmp"
   /project/join:
     post:
       summary: Join a project
