@@ -282,7 +282,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Hello World!"
 
   /project/{id}/upload:
     post:
