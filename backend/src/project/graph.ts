@@ -1,4 +1,3 @@
-import { FlowResponse } from "@datastax/langflow-client/dist/flow_response";
 import { loadLangflow } from "../helper/langflowClient";
 import { getProjectById } from "../helper/projectHelper";
 import { getUserById } from "../helper/userHelper";
@@ -38,7 +37,7 @@ export async function projectGetGraph(userId: string, projectId: string) {
   console.log("inside graph")
   try {
     const flow = await loadLangflow();
-    const response: FlowResponse = await flow.run(contentPrompt, {
+    const response = await flow.run(contentPrompt, {
       tweaks: {
         "AstraDB-lvoxd":
         {
