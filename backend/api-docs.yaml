@@ -239,8 +239,14 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: object
+                  concepts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Concept'
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Link'
 
   /project/join:
     post:
@@ -494,3 +500,22 @@ components:
         createdAt:
           type: string
           format: date-time
+    
+    Concept:
+      type: object
+      properties:
+        id:
+          type: integer
+        concept_name:
+          type: string
+        summary_notes:
+          type: string
+    
+    Link:
+      type: object
+      properties:
+        concept_ids:
+          type: array
+          items:
+            type: integer
+
