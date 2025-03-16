@@ -1,3 +1,4 @@
+import { flow } from "../helper/langflowClient";
 import { getProjectById, sendMessage } from "../helper/projectHelper";
 import { getUserById } from "../helper/userHelper";
 
@@ -14,7 +15,17 @@ export async function projectSendMessage(userId: string, projectId: string, cont
   const message = await sendMessage(userId, projectId, content);
   if (message === null) throw { status: 400, message: "Failed to send message." };
 
-  // TODO: Call to Langflow API
-
-  return message; // TODO: Add the response from Langflow API
+  try {
+    const response = await flow.run(content, {
+      tweaks: {
+        "AstraDB-lvoxd":
+        {
+          "advanced_search_filter": `{\"\\\"metadata.metadata.data_source.record_locator.metadata.projectid\\\"\":\"${projectId}\"}`
+        }
+      }
+    });
+    return response.chatOutputText() || "Could not retrieve message at this time"
+  } catch (e) {
+    throw { status: 400, message: "Error retrieving langflow message" }
+  }
 }
