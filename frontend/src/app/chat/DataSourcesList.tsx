@@ -123,13 +123,13 @@ export default function DataSourcesList({
             className="w-full h-auto flex gap-2 duration-100 cursor-pointer hover:bg-foreground/15 p-3 rounded-lg"
             onClick={() => onFileSelected(data)}
           >
-            <File className="min-w-6 min-h-6" />
+            <File className="w-4 h-4" />
             <div className="min-w-0 flex-1 text-left">
-              <p className="truncate font-medium">{data.name}</p>
+              <p className="truncate font-light text-sm">{data.name}</p>
             </div>
             <Dialog>
               <DialogTrigger>
-                <Trash2 className="min-w-6 min-h-6 text-destructive" />
+                <Trash2 className="w-4 h-4 text-destructive" />
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
