@@ -189,7 +189,7 @@ export default function DataSourcesList({
         ))}
         {filteredDataSources.length === 0 && input && (
           <div className="text-center py-4 text-sm text-muted-foreground">
-            No data sources found matching "{input}"
+            No data sources found matching &quot;{input}&quot;
           </div>
         )}
       </div>
