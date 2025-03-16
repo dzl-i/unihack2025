@@ -36,6 +36,7 @@ import { projectUploadDataSource } from './project/uploadData.js';
 import { projectDeleteDataSource } from './project/deleteData.js';
 import { projectGetData } from './project/getData.js';
 import { projectAddCollaborator } from './project/addCollaborator.js';
+import { projectGetGraph } from './project/graph.js';
 
 
 interface MulterRequest extends Request {
@@ -217,6 +218,21 @@ app.delete('/project/:id', authenticateToken, async (req: Request, res: Response
     const project = await projectDelete(userId, projectId);
 
     res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.status || 500).json({ error: error.message || "An error occurred." });
+  }
+});
+
+// Get graph of a project
+app.get('/project/:id/graph', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.userId;
+    const projectId = req.params.id;
+
+    const message = await projectGetGraph(userId, projectId);
+
+    res.status(200).json({ message });
   } catch (error: any) {
     console.error(error);
     res.status(error.status || 500).json({ error: error.message || "An error occurred." });
