@@ -129,18 +129,20 @@ export default function DataSourcesList({
             </div>
             <Dialog>
               <DialogTrigger>
-                <Trash2 className="w-4 h-4 text-destructive" />
+                <Trash2 className="w-4 h-4 text-destructive cursor-pointer" />
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Yippee</DialogTitle>
-                  <DialogDescription>ts pmo icl</DialogDescription>
+                  <DialogTitle>Delete Data Source</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to delete "{data.name}"? This action cannot be undone.
+                  </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <DialogClose asChild>
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
-                  <Button variant="destructive">Remove</Button>
+                  <Button variant="destructive">Delete</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
