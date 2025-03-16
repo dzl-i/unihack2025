@@ -47,7 +47,6 @@ export default function DataSourcesList({
     setIsUploading(true);
 
     try {
-      // Now using the dynamic project_id from URL parameters
       const formData = new FormData();
       formData.append("file", files[0]);
 
@@ -60,7 +59,13 @@ export default function DataSourcesList({
       if (error) {
         toast.error("Failed to upload files");
       } else {
-        setDatas((prev) => [...prev, data]);
+        // Make sure data has the correct structure
+        const newDataSource: DataSource = {
+          dataSourceId: data.dataSourceId || data.id || data._id,
+          name: data.name || files[0].name
+        };
+        
+        setDatas((prev) => [...prev, newDataSource]);
         toast.success("File uploaded successfully");
       }
     } catch (err) {
