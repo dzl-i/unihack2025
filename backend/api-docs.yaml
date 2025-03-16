@@ -6,6 +6,8 @@ info:
 servers:
   - url: http://localhost:3000
     description: Development server
+  - url: https://api.collabai.denzeliskandar.com
+    description: Production server
 
 paths:
   /:
@@ -118,7 +120,7 @@ paths:
       summary: Logout a user
       description: End user session
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: User successfully logged out
@@ -128,30 +130,21 @@ paths:
       summary: Get user profile
       description: Retrieve the current user's profile information
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: User profile information
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  userId:
-                    type: string
-                  name:
-                    type: string
-                  email:
-                    type: string
-                  profilePic:
-                    type: string
+                $ref: '#/components/schemas/User'
 
   /project:
     post:
       summary: Create a new project
       description: Create a new project
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         required: true
         content:
@@ -177,7 +170,7 @@ paths:
       summary: List all projects for a user
       description: Get all projects that the user is a member of
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: List of projects
@@ -193,7 +186,7 @@ paths:
       summary: Get details of a project
       description: Retrieve detailed information about a specific project
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: id
           in: path
@@ -211,7 +204,7 @@ paths:
       summary: Delete a project
       description: Remove a project from the system
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: id
           in: path
@@ -225,12 +218,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+                
   /project/{id}/graph:
     get:
       summary: Get graph view of a project
       description: Retrieve common topics and their edges
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: id
           in: path
@@ -239,21 +233,21 @@ paths:
             type: string
       responses:
         '200':
-          description: Project graph
+          description: Project graph data
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   message:
-                    type: string
-                    example: "tmp"
+                    type: object
+
   /project/join:
     post:
       summary: Join a project
       description: Join an existing project using its code
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         required: true
         content:
@@ -279,7 +273,7 @@ paths:
       summary: Send a message to a project
       description: Add a new message to the project chat
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: id
           in: path
@@ -307,15 +301,57 @@ paths:
                 type: object
                 properties:
                   message:
+                    type: object
+                    description: Message object returned
+
+  /project/data/{id}:
+    get:
+      summary: Get file data from a project
+      description: Retrieve a data source URL from a project
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: URL to access the file data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
                     type: string
-                    example: "Hello World!"
+                    description: URL to access the file
+    delete:
+      summary: Delete a file from a project
+      description: Remove a data source from a project
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
 
   /project/{id}/upload:
     post:
       summary: Upload a file to a project
       description: Upload a data source file to a project
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: id
           in: path
@@ -340,65 +376,58 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataSource'
 
-  /project/data/{id}:
-    get:
-      summary: Get file data from a project
-      description: Retrieve a data source URL from a project
+  /project/{id}/collaborator:
+    post:
+      summary: Add a collaborator to a project
+      description: Add a user as a collaborator to a project using their email
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "collaborator@example.com"
       responses:
         '200':
-          description: URL to access the file data
+          description: Collaborator successfully added
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  url:
-                    type: string
-                    description: URL to access the file
-                    example: "https://storage.example.com/files/document.pdf"
-    delete:
-      summary: Delete a file from a project
-      description: Remove a data source from a project
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: File successfully deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataSource'
+                $ref: '#/components/schemas/Project'
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: JWT Authentication using HTTP cookies
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+      description: Authentication using HTTP cookies (accessToken and refreshToken)
 
   schemas:
     User:
       type: object
       properties:
-        userId:
+        id:
           type: string
         name:
           type: string
         email:
+          type: string
+        username:
           type: string
         profilePic:
           type: string
@@ -406,14 +435,20 @@ components:
     Project:
       type: object
       properties:
-        projectId:
+        id:
           type: string
         name:
           type: string
         code:
           type: string
-        isShared:
+        isArchived:
           type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
         users:
           type: array
           items:
@@ -430,20 +465,32 @@ components:
     Message:
       type: object
       properties:
-        messageId:
+        id:
           type: string
         content:
           type: string
-        sender:
-          $ref: '#/components/schemas/User'
         createdAt:
           type: string
           format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
 
     DataSource:
       type: object
       properties:
-        dataSourceId:
+        id:
           type: string
         name:
           type: string
+        size:
+          type: number
+        type:
+          type: string
+        url:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
