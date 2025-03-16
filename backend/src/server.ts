@@ -48,10 +48,11 @@ const prisma = new PrismaClient();
 
 // Set up web app using JSON
 const app = express();
-app.use(express.json({ limit: '50mb' }));
-app.use(cookieParser());
-const httpServer = new Server(app);
 const upload = multer({ storage: multer.memoryStorage() });
+app.use(cookieParser());
+app.use(express.json({ limit: '50mb' }));
+
+const httpServer = new Server(app);
 
 const io = new SocketIOServer(httpServer, {
   cors: {
@@ -257,7 +258,6 @@ app.post('/project/:id/send', authenticateToken, async (req: Request, res: Respo
 app.get('/project/data/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const dataId = req.params.id;
-
     const url = await projectGetData(dataId);
 
     res.status(200).json(url);
@@ -272,6 +272,7 @@ app.post('/project/:id/upload', authenticateToken, upload.single('file'), async 
   try {
     const userId = res.locals.userId;
     const projectId = req.params.id;
+    console.log("Uploaded file:", req.file);
     const file = await projectUploadDataSource(userId, projectId, req.file);
 
     res.status(200).json(file);
